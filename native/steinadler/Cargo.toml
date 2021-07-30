@@ -1,0 +1,23 @@
+[package]
+name = "steinadler"
+version = "0.1.0"
+description = "Erlang Distribution Protocol write in Rust"
+keywords = [
+    "erlang",
+    "beam",
+    "dist protocol",
+    "cluster"
+  ]
+homepage = ""
+documentation = ""
+authors = ["Adriano Santos <sleipnir@bsd.com.br>"]
+license = "Apache-2.0"
+edition = "2018"
+
+[lib]
+name = "steinadler"
+path = "src/lib.rs"
+crate-type = ["cdylib"]
+
+[dependencies]
+rustler = "0.22.0"
