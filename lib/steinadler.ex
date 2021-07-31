@@ -2,17 +2,18 @@ defmodule Steinadler do
   @moduledoc """
   Documentation for `Steinadler`.
   """
+  use Rustler,
+    otp_app: :steinadler,
+    crate: :steinadler
 
-  @doc """
-  Hello world.
+  @spec bind(String.t(), integer()) :: boolean()
+  def bind(_address, _port), do: error()
 
-  ## Examples
+  @spec connect(String.t(), String.t(), integer()) :: boolean()
+  def connect(_name, _address, _port), do: error()
 
-      iex> Steinadler.hello()
-      :world
+  @spec disconnect(String.t()) :: boolean()
+  def disconnect(_name), do: error()
 
-  """
-  def hello do
-    :world
-  end
+  defp error, do: :erlang.nif_error(:nif_not_loaded)
 end

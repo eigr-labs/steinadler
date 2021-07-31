@@ -1,6 +1,18 @@
-#[rustler::nif]
-fn add(a: i64, b: i64) -> i64 {
-    a + b
+
+
+#[rustler::nif(schedule = "DirtyCpu")]
+fn bind(address: String, port: i64) -> bool {
+    true
 }
 
-rustler::init!("Elixir.Steinadler", [add]);
+#[rustler::nif(schedule = "DirtyCpu")]
+fn connect(name: String, address: String, port: i64) -> bool {
+    true
+}
+
+#[rustler::nif]
+fn disconnect(name: String) -> bool {
+    true
+}
+
+rustler::init!("Elixir.Steinadler", [bind, connect, disconnect]);
