@@ -15,4 +15,4 @@ fn disconnect(name: String) -> bool {
     true
 }
 
-rustler::init!("Elixir.Steinadler", [bind, connect, disconnect]);
+rustler::init!("Elixir.Steinadler.Native", [bind, connect, disconnect]);

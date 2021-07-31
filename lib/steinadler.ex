@@ -1,19 +1,21 @@
 defmodule Steinadler do
   @moduledoc """
-  Documentation for `Steinadler`.
+  `Steinadler`.
   """
-  use Rustler,
-    otp_app: :steinadler,
-    crate: :steinadler
+  alias Steinadler.Native
 
   @spec bind(String.t(), integer()) :: boolean()
-  def bind(_address, _port), do: error()
+  def bind(address, port) do
+    Native.bind(address, port)
+  end
 
   @spec connect(String.t(), String.t(), integer()) :: boolean()
-  def connect(_name, _address, _port), do: error()
+  def connect(name, address, port) do
+    Native.connect(name, address, port)
+  end
 
   @spec disconnect(String.t()) :: boolean()
-  def disconnect(_name), do: error()
-
-  defp error, do: :erlang.nif_error(:nif_not_loaded)
+  def disconnect(name) do
+    Native.disconnect(name)
+  end
 end
