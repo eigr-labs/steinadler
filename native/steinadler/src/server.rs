@@ -1,3 +1,4 @@
+use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::{TcpListener, TcpStream};
 use tokio_stream::StreamExt;
 use tokio_util::codec::{Framed, LinesCodec};
@@ -70,30 +71,45 @@ impl Server {
         // `state` handle is cloned and passed into the task that processes the
         // client connection.
         
-        /*
+        
         let address = format!("{}:{}", self.address, self.port);
-
-        let addr = env::args()
-            .nth(1)
-            .unwrap_or_else(|| "127.0.0.0:4096");
-        */
 
         // Bind a TCP listener to the socket address.
         //
         // Note that this is the Tokio TcpListener, which is fully async.
-        let listener = TcpListener::bind("127.0.0.0:4096".to_string()).await?;
+        let listener = TcpListener::bind(address).await?;
 
         //tracing::info!("server running on {}", addr);
-        println!("server running ");
+        println!("server running...");
 
         loop {
             // Asynchronously wait for an inbound TcpStream.
-            let (stream, addr) = listener.accept().await?;
+            let (mut stream, addr) = listener.accept().await?;
 
               // Spawn our handler to be run asynchronously.
             tokio::spawn(async move {
                 //tracing::debug!("accepted connection");
                 println!("accepted connection");
+                let mut buf = [0; 1024];
+
+                // In a loop, read data from the socket and write the data back.
+                loop {
+                    let n = match stream.read(&mut buf).await {
+                        // socket closed
+                        Ok(n) if n == 0 => return,
+                        Ok(n) => n,
+                        Err(e) => {
+                            eprintln!("failed to read from socket; err = {:?}", e);
+                            return;
+                        }
+                    };
+
+                    // Write the data back
+                    if let Err(e) = stream.write_all(&buf[0..n]).await {
+                        eprintln!("failed to write to socket; err = {:?}", e);
+                        return;
+                    }
+                }
                 
             });
         }

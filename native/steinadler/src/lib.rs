@@ -25,8 +25,6 @@ fn bind(address: String, port: i64) {
       .address(address)
       .port(port)
       .bind().unwrap();
-
-    //atoms::ok()
 }
 
 #[rustler::nif(schedule = "DirtyCpu")]
