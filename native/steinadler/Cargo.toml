@@ -21,3 +21,4 @@ crate-type = ["cdylib"]
 
 [dependencies]
 rustler = "0.22.0"
+eetf    = "0.5.0"
