@@ -1,15 +1,14 @@
 use std::error::Error;
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::{TcpListener, TcpStream};
-use tokio_util::codec::{BytesCodec, FramedRead, FramedWrite};
 
-use std::io;
-use std::net::SocketAddr;
+use std::str;
 
 #[derive(Debug, Clone)]
 pub struct Server {
     pub address: String,
     pub port: i64,
+    pub name: String,
 }
 
 impl Default for Server {
@@ -17,6 +16,7 @@ impl Default for Server {
         Server {
             address: String::from("0.0.0.0"),
             port: 4096,
+            name: String::from("app"),
         }
     }
 }
@@ -36,6 +36,11 @@ impl Server {
         self
     }
 
+    pub fn name(&mut self, name: String) -> &mut Server {
+        self.name = name;
+        self
+    }
+
     #[tokio::main]
     pub async fn bind(&mut self) -> Result<(), Box<dyn Error>> {
         let addr = format!("{}:{}", &self.address, &self.port);
@@ -46,7 +51,7 @@ impl Server {
 
         loop {
             // Asynchronously wait for an inbound TcpStream.
-            let (mut stream, addr) = listener.accept().await?;
+            let (mut stream, _addr) = listener.accept().await?;
 
             // Spawn our handler to be run asynchronously.
             tokio::spawn(async move {
@@ -59,20 +64,36 @@ impl Server {
                     let n = match stream.read(&mut buf).await {
                         // socket closed
                         Ok(n) if n == 0 => return,
-                        Ok(n) => n,
+                        Ok(n) => {
+                            eprintln!(
+                                "stream read message: {:?}\r",
+                                str::from_utf8(&buf[0..n]).unwrap()
+                            );
+                            n
+                        }
                         Err(e) => {
-                            eprintln!("failed to read from socket; err = {:?}", e);
+                            eprintln!("failed to read from socket; err = {:?}\r", e);
                             return;
                         }
                     };
 
                     // Write the data back
                     if let Err(e) = stream.write_all(&buf[0..n]).await {
-                        eprintln!("failed to write to socket; err = {:?}", e);
+                        eprintln!("failed to write to socket; err = {:?}\r", e);
                         return;
                     }
                 }
             });
         }
+    }
+
+    #[tokio::main]
+    pub async fn connect(&mut self) -> Result<(), Box<dyn Error>> {
+        let addr = format!("{}:{}", &self.address, &self.port);
+        let mut stream = TcpStream::connect(&addr).await?;
+
+        stream.write_all(b"hello world!").await?;
+
+        Ok(())
     }
 }
