@@ -72,7 +72,6 @@ impl Server {
                         return;
                     }
                 }
-                
             });
         }
     }
