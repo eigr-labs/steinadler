@@ -6,6 +6,9 @@ defmodule Steinadler.Native do
     otp_app: :steinadler,
     crate: :steinadler
 
+  @spec register_node(any, any) :: {:ok, pos_integer}
+  def register_node(_name, _port), do: error()
+
   @spec bind(String.t(), integer()) :: boolean()
   def bind(_address, _port), do: error()
 

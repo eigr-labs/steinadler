@@ -1,4 +1,6 @@
-defmodule Steinadler.Dist.Server do
+defmodule Steinadler.Dist.Protocol_dist do
+  def listen(name, _host), do: listen(name)
+
   def listen(name) do
     # Here we figure out what port we want to listen on.
 

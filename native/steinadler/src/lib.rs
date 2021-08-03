@@ -15,6 +15,9 @@ mod atoms {
     }
 }
 
+#[rustler::nif]
+fn register_node(_name: String, _port: i64) {}
+
 #[rustler::nif(schedule = "DirtyCpu")]
 fn bind(address: String, port: i64) {
     Server::new().address(address).port(port).bind().unwrap();
