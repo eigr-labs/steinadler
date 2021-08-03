@@ -38,4 +38,7 @@ fn disconnect(name: String) -> Atom {
     atoms::ok()
 }
 
-rustler::init!("Elixir.Steinadler.Native", [bind, connect, disconnect]);
+rustler::init!(
+    "Elixir.Steinadler.Native",
+    [bind, connect, disconnect, register_node]
+);
