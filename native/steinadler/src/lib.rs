@@ -19,12 +19,12 @@ mod atoms {
 fn register_node(_name: String, _port: i64) {}
 
 #[rustler::nif(schedule = "DirtyCpu")]
-fn bind(address: String, port: i64) {
+fn start_node(address: String, port: i64) {
     Server::new().address(address).port(port).bind().unwrap();
 }
 
 #[rustler::nif(schedule = "DirtyCpu")]
-fn connect(name: String, address: String, port: i64) {
+fn register(name: String, address: String, port: i64) {
     Server::new()
         .name(name)
         .address(address)
@@ -34,11 +34,11 @@ fn connect(name: String, address: String, port: i64) {
 }
 
 #[rustler::nif]
-fn disconnect(name: String) -> Atom {
+fn unregister(_name: String) -> Atom {
     atoms::ok()
 }
 
 rustler::init!(
     "Elixir.Steinadler.Native",
-    [bind, connect, disconnect, register_node]
+    [start_node, register, unregister]
 );

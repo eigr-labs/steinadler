@@ -20,9 +20,10 @@ path = "src/lib.rs"
 crate-type = ["cdylib"]
 
 [dependencies]
-eetf    = "0.5.0"
-futures = { version = "0.3.0", features = ["thread-pool"]}
+ockam = "0.23.1"
 rustler = "0.22.0"
+
+futures = { version = "0.3.0", features = ["thread-pool"]}
 tokio = { version = "1.9.0", features = ["full", "tracing"] }
 tokio-util = { version = "0.6.7", features = ["full"] }
 tokio-stream = { version =  "0.1", features = ["net"] }

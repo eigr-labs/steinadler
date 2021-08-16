@@ -6,17 +6,14 @@ defmodule Steinadler.Native do
     otp_app: :steinadler,
     crate: :steinadler
 
-  @spec register_node(any, any) :: {:ok, pos_integer}
-  def register_node(_name, _port), do: error()
+  @spec register(String.t(), String.t(), integer()) :: boolean()
+  def register(_name, _address, _port), do: error()
 
-  @spec bind(String.t(), integer()) :: boolean()
-  def bind(_address, _port), do: error()
+  @spec unregister(String.t()) :: boolean()
+  def unregister(_name), do: error()
 
-  @spec connect(String.t(), String.t(), integer()) :: boolean()
-  def connect(_name, _address, _port), do: error()
-
-  @spec disconnect(String.t()) :: boolean()
-  def disconnect(_name), do: error()
+  @spec start_node(String.t(), integer()) :: boolean()
+  def start_node(_address, _port), do: error()
 
   defp error, do: :erlang.nif_error(:nif_not_loaded)
 end
