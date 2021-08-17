@@ -94,13 +94,14 @@ defmodule Steinadler do
     alias Steinadler.Native
 
     @spec start_node(String.t(), String.t(), integer()) :: any()
-    def start_node(_name, address, port), do: spawn(fn -> Native.start_node(address, port) end)
+    def start_node(_name, address, port),
+      do: spawn_link(fn -> Native.start_node(address, port) end)
 
     @spec register(atom()) :: boolean()
     def register(address) do
       [name, fqdn] = String.split(Atom.to_string(address), "@")
       Logger.debug("Connecting with Node: #{inspect(name)}. On Address: #{inspect(fqdn)}")
-      spawn(fn -> Native.register(name, fqdn, 4000) end)
+      spawn_link(fn -> Native.register(name, fqdn, 4000) end)
       true
     end
 

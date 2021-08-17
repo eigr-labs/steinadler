@@ -20,7 +20,6 @@ path = "src/lib.rs"
 crate-type = ["cdylib"]
 
 [dependencies]
-ockam = "0.23.1"
 rustler = "0.22.0"
 
 futures = { version = "0.3.0", features = ["thread-pool"]}
