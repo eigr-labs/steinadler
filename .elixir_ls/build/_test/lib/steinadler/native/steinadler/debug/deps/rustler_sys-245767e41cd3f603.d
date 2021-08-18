@@ -1,0 +1,12 @@
+/home/sleipnir/workspaces/github/eigr-labs/steinadler/.elixir_ls/build/_test/lib/steinadler/native/steinadler/debug/deps/rustler_sys-245767e41cd3f603.rmeta: /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/rustler_sys-2.1.1/src/lib.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/rustler_sys-2.1.1/src/initmacro.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/rustler_sys-2.1.1/src/rustler_sys_api.rs /home/sleipnir/workspaces/github/eigr-labs/steinadler/.elixir_ls/build/_test/lib/steinadler/native/steinadler/debug/build/rustler_sys-a7c6a89636b98750/out/nif_api.snippet
+
+/home/sleipnir/workspaces/github/eigr-labs/steinadler/.elixir_ls/build/_test/lib/steinadler/native/steinadler/debug/deps/librustler_sys-245767e41cd3f603.rlib: /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/rustler_sys-2.1.1/src/lib.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/rustler_sys-2.1.1/src/initmacro.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/rustler_sys-2.1.1/src/rustler_sys_api.rs /home/sleipnir/workspaces/github/eigr-labs/steinadler/.elixir_ls/build/_test/lib/steinadler/native/steinadler/debug/build/rustler_sys-a7c6a89636b98750/out/nif_api.snippet
+
+/home/sleipnir/workspaces/github/eigr-labs/steinadler/.elixir_ls/build/_test/lib/steinadler/native/steinadler/debug/deps/rustler_sys-245767e41cd3f603.d: /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/rustler_sys-2.1.1/src/lib.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/rustler_sys-2.1.1/src/initmacro.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/rustler_sys-2.1.1/src/rustler_sys_api.rs /home/sleipnir/workspaces/github/eigr-labs/steinadler/.elixir_ls/build/_test/lib/steinadler/native/steinadler/debug/build/rustler_sys-a7c6a89636b98750/out/nif_api.snippet
+
+/home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/rustler_sys-2.1.1/src/lib.rs:
+/home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/rustler_sys-2.1.1/src/initmacro.rs:
+/home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/rustler_sys-2.1.1/src/rustler_sys_api.rs:
+/home/sleipnir/workspaces/github/eigr-labs/steinadler/.elixir_ls/build/_test/lib/steinadler/native/steinadler/debug/build/rustler_sys-a7c6a89636b98750/out/nif_api.snippet:
+
+# env-dep:OUT_DIR=/home/sleipnir/workspaces/github/eigr-labs/steinadler/.elixir_ls/build/_test/lib/steinadler/native/steinadler/debug/build/rustler_sys-a7c6a89636b98750/out

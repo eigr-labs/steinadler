@@ -21,8 +21,10 @@ defmodule Steinadler.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:cowlib, "~> 2.9.0", override: true},
+      {:google_protos, "~> 0.1.0"},
+      {:grpc, "~> 0.5.0-beta.1"},
       {:libcluster, "~> 3.3"},
-      {:ranch, "~> 2.0"},
       {:rustler, "~> 0.22"}
     ]
   end

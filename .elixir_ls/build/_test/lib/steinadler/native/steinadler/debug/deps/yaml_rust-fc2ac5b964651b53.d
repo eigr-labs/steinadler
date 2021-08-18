@@ -1,0 +1,11 @@
+/home/sleipnir/workspaces/github/eigr-labs/steinadler/.elixir_ls/build/_test/lib/steinadler/native/steinadler/debug/deps/yaml_rust-fc2ac5b964651b53.rmeta: /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/yaml-rust-0.4.5/src/lib.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/yaml-rust-0.4.5/src/emitter.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/yaml-rust-0.4.5/src/parser.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/yaml-rust-0.4.5/src/scanner.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/yaml-rust-0.4.5/src/yaml.rs
+
+/home/sleipnir/workspaces/github/eigr-labs/steinadler/.elixir_ls/build/_test/lib/steinadler/native/steinadler/debug/deps/libyaml_rust-fc2ac5b964651b53.rlib: /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/yaml-rust-0.4.5/src/lib.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/yaml-rust-0.4.5/src/emitter.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/yaml-rust-0.4.5/src/parser.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/yaml-rust-0.4.5/src/scanner.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/yaml-rust-0.4.5/src/yaml.rs
+
+/home/sleipnir/workspaces/github/eigr-labs/steinadler/.elixir_ls/build/_test/lib/steinadler/native/steinadler/debug/deps/yaml_rust-fc2ac5b964651b53.d: /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/yaml-rust-0.4.5/src/lib.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/yaml-rust-0.4.5/src/emitter.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/yaml-rust-0.4.5/src/parser.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/yaml-rust-0.4.5/src/scanner.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/yaml-rust-0.4.5/src/yaml.rs
+
+/home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/yaml-rust-0.4.5/src/lib.rs:
+/home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/yaml-rust-0.4.5/src/emitter.rs:
+/home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/yaml-rust-0.4.5/src/parser.rs:
+/home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/yaml-rust-0.4.5/src/scanner.rs:
+/home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/yaml-rust-0.4.5/src/yaml.rs:

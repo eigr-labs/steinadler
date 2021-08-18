@@ -1,0 +1,11 @@
+/home/sleipnir/workspaces/github/eigr-labs/steinadler/.elixir_ls/build/_test/lib/steinadler/native/steinadler/debug/deps/prost-6f94a753c0013a29.rmeta: /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/prost-0.8.0/src/lib.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/prost-0.8.0/src/error.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/prost-0.8.0/src/message.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/prost-0.8.0/src/types.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/prost-0.8.0/src/encoding.rs
+
+/home/sleipnir/workspaces/github/eigr-labs/steinadler/.elixir_ls/build/_test/lib/steinadler/native/steinadler/debug/deps/libprost-6f94a753c0013a29.rlib: /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/prost-0.8.0/src/lib.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/prost-0.8.0/src/error.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/prost-0.8.0/src/message.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/prost-0.8.0/src/types.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/prost-0.8.0/src/encoding.rs
+
+/home/sleipnir/workspaces/github/eigr-labs/steinadler/.elixir_ls/build/_test/lib/steinadler/native/steinadler/debug/deps/prost-6f94a753c0013a29.d: /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/prost-0.8.0/src/lib.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/prost-0.8.0/src/error.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/prost-0.8.0/src/message.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/prost-0.8.0/src/types.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/prost-0.8.0/src/encoding.rs
+
+/home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/prost-0.8.0/src/lib.rs:
+/home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/prost-0.8.0/src/error.rs:
+/home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/prost-0.8.0/src/message.rs:
+/home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/prost-0.8.0/src/types.rs:
+/home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/prost-0.8.0/src/encoding.rs:

@@ -1,0 +1,11 @@
+/home/sleipnir/workspaces/github/eigr-labs/steinadler/.elixir_ls/build/_test/lib/steinadler/native/steinadler/debug/deps/libthiserror_impl-6efb91417073f357.so: /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.26/src/lib.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.26/src/ast.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.26/src/attr.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.26/src/expand.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.26/src/fmt.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.26/src/prop.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.26/src/valid.rs
+
+/home/sleipnir/workspaces/github/eigr-labs/steinadler/.elixir_ls/build/_test/lib/steinadler/native/steinadler/debug/deps/thiserror_impl-6efb91417073f357.d: /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.26/src/lib.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.26/src/ast.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.26/src/attr.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.26/src/expand.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.26/src/fmt.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.26/src/prop.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.26/src/valid.rs
+
+/home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.26/src/lib.rs:
+/home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.26/src/ast.rs:
+/home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.26/src/attr.rs:
+/home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.26/src/expand.rs:
+/home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.26/src/fmt.rs:
+/home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.26/src/prop.rs:
+/home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/thiserror-impl-1.0.26/src/valid.rs:

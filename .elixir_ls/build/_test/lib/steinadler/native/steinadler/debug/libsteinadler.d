@@ -1,0 +1,1 @@
+/home/sleipnir/workspaces/github/eigr-labs/steinadler/.elixir_ls/build/_test/lib/steinadler/native/steinadler/debug/libsteinadler.so: /home/sleipnir/workspaces/github/eigr-labs/steinadler/native/steinadler/src/lib.rs /home/sleipnir/workspaces/github/eigr-labs/steinadler/native/steinadler/src/server.rs

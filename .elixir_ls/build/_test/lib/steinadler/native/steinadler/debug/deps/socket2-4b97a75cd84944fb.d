@@ -1,0 +1,11 @@
+/home/sleipnir/workspaces/github/eigr-labs/steinadler/.elixir_ls/build/_test/lib/steinadler/native/steinadler/debug/deps/socket2-4b97a75cd84944fb.rmeta: /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.4.1/src/lib.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.4.1/src/sockaddr.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.4.1/src/socket.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.4.1/src/sockref.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.4.1/src/sys/unix.rs
+
+/home/sleipnir/workspaces/github/eigr-labs/steinadler/.elixir_ls/build/_test/lib/steinadler/native/steinadler/debug/deps/libsocket2-4b97a75cd84944fb.rlib: /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.4.1/src/lib.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.4.1/src/sockaddr.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.4.1/src/socket.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.4.1/src/sockref.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.4.1/src/sys/unix.rs
+
+/home/sleipnir/workspaces/github/eigr-labs/steinadler/.elixir_ls/build/_test/lib/steinadler/native/steinadler/debug/deps/socket2-4b97a75cd84944fb.d: /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.4.1/src/lib.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.4.1/src/sockaddr.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.4.1/src/socket.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.4.1/src/sockref.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.4.1/src/sys/unix.rs
+
+/home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.4.1/src/lib.rs:
+/home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.4.1/src/sockaddr.rs:
+/home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.4.1/src/socket.rs:
+/home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.4.1/src/sockref.rs:
+/home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/socket2-0.4.1/src/sys/unix.rs:

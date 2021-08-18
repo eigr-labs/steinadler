@@ -10,10 +10,10 @@ defmodule Steinadler do
     port = Keyword.get(args, :default_port, 4_000)
     local_node = Node.self()
     Logger.debug("Starting node #{inspect(local_node)}")
-    [name, fqdn] = String.split(Atom.to_string(local_node), "@")
-    Steinadler.LocalNode.start_node(name, fqdn, port)
 
     children = [
+      {Registry, keys: :unique, name: Steinadler.Registry},
+      {GRPC.Server.Supervisor, get_grpc_options(port)},
       cluster_supervisor(args)
     ]
 
@@ -22,6 +22,18 @@ defmodule Steinadler do
 
   def start_link(args) do
     Supervisor.start_link(__MODULE__, args, name: __MODULE__)
+  end
+
+  defp get_grpc_options(port) do
+    if Application.get_env(:steinadler, :tls) do
+      cert_path = Application.get_env(:steinadler, :tls_cert_path)
+      key_path = Application.get_env(:steinadler, :tls_key_path)
+      cred = GRPC.Credential.new(ssl: [certfile: cert_path, keyfile: key_path])
+
+      {Steinadler.Dist.Protocol.Endpoint, port, cred: cred}
+    else
+      {Steinadler.Dist.Protocol.Endpoint, port}
+    end
   end
 
   defp cluster_supervisor(args) do

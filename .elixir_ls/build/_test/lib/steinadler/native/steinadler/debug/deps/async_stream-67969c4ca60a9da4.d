@@ -1,0 +1,10 @@
+/home/sleipnir/workspaces/github/eigr-labs/steinadler/.elixir_ls/build/_test/lib/steinadler/native/steinadler/debug/deps/async_stream-67969c4ca60a9da4.rmeta: /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/async-stream-0.3.2/src/lib.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/async-stream-0.3.2/src/async_stream.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/async-stream-0.3.2/src/next.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/async-stream-0.3.2/src/yielder.rs
+
+/home/sleipnir/workspaces/github/eigr-labs/steinadler/.elixir_ls/build/_test/lib/steinadler/native/steinadler/debug/deps/libasync_stream-67969c4ca60a9da4.rlib: /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/async-stream-0.3.2/src/lib.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/async-stream-0.3.2/src/async_stream.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/async-stream-0.3.2/src/next.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/async-stream-0.3.2/src/yielder.rs
+
+/home/sleipnir/workspaces/github/eigr-labs/steinadler/.elixir_ls/build/_test/lib/steinadler/native/steinadler/debug/deps/async_stream-67969c4ca60a9da4.d: /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/async-stream-0.3.2/src/lib.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/async-stream-0.3.2/src/async_stream.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/async-stream-0.3.2/src/next.rs /home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/async-stream-0.3.2/src/yielder.rs
+
+/home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/async-stream-0.3.2/src/lib.rs:
+/home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/async-stream-0.3.2/src/async_stream.rs:
+/home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/async-stream-0.3.2/src/next.rs:
+/home/sleipnir/.cargo/registry/src/github.com-1ecc6299db9ec823/async-stream-0.3.2/src/yielder.rs:
