@@ -19,6 +19,9 @@ name = "steinadler"
 path = "src/lib.rs"
 crate-type = ["cdylib"]
 
+# Compile protos
+build = "build.rs"
+
 [dependencies]
 rustler = "0.22.0"
 tonic = "0.5"

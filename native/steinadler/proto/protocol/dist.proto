@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package steinadler.dist.protocol;
+
+import "google/protobuf/any.proto";
+
+message Node {
+    string name = 1;
+    string address = 2;
+}
+
+message Register {
+    Node node = 1;
+}
+
+message PID {
+    string pid = 1;
+}
+
+enum Result {
+    OK = 0;
+    ERROR = 1;
+}
+
+message ProcessRequest {
+    PID source = 1;
+    string mod = 2;
+    string fun = 3;
+    repeated google.protobuf.Any args = 4;
+}
+
+message ProcessResponse {
+    PID source = 1;
+    Result result = 2;
+}
+
+message Data {
+    oneof action {
+        Register register = 1;
+        ProcessRequest request = 2;
+        ProcessResponse response = 3;
+    };
+}
+
+service DistributionProtocol {
+    rpc Handle(stream Data) returns (Data) {}
+}
