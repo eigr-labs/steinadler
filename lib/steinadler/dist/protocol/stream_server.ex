@@ -5,7 +5,7 @@ defmodule Steinadler.Dist.Protocol.StreamServer do
   use GenServer
   require Logger
 
-  alias Steinadler.Dist.Protocol.{Node, Register, ProcessRequest}
+  alias Steinadler.Dist.Protocol.{Node, ProcessRequest}
 
   # Server API
 
@@ -28,17 +28,17 @@ defmodule Steinadler.Dist.Protocol.StreamServer do
 
   @impl true
   def handle_call({:request, _req}, _from, state) do
-    {:reply, state, state}
+    {:reply, :ok, state}
   end
 
   @impl true
   def handle_call({:register, _node}, _from, state) do
-    {:reply, state, state}
+    {:reply, :ok, state, :hibernate}
   end
 
   @impl true
   def handle_cast({:unregister, _node}, state) do
-    {:noreply, state}
+    {:stop, :normal, state}
   end
 
   # Client API
