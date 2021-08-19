@@ -4,6 +4,8 @@ pub struct Node {
     pub name: ::prost::alloc::string::String,
     #[prost(string, tag = "2")]
     pub address: ::prost::alloc::string::String,
+    #[prost(int32, tag = "3")]
+    pub port: i32,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Register {

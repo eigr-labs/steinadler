@@ -21,21 +21,24 @@ defmodule Steinadler.Dist.Protocol.Node do
 
   @type t :: %__MODULE__{
           name: String.t(),
-          address: String.t()
+          address: String.t(),
+          port: integer
         }
-  defstruct [:name, :address]
+  defstruct [:name, :address, :port]
 
   def descriptor do
     # credo:disable-for-next-line
     Elixir.Google.Protobuf.DescriptorProto.decode(
       <<10, 4, 78, 111, 100, 101, 18, 18, 10, 4, 110, 97, 109, 101, 24, 1, 32, 1, 40, 9, 82, 4,
         110, 97, 109, 101, 18, 24, 10, 7, 97, 100, 100, 114, 101, 115, 115, 24, 2, 32, 1, 40, 9,
-        82, 7, 97, 100, 100, 114, 101, 115, 115>>
+        82, 7, 97, 100, 100, 114, 101, 115, 115, 18, 18, 10, 4, 112, 111, 114, 116, 24, 3, 32, 1,
+        40, 5, 82, 4, 112, 111, 114, 116>>
     )
   end
 
   field :name, 1, type: :string
   field :address, 2, type: :string
+  field :port, 3, type: :int32
 end
 
 defmodule Steinadler.Dist.Protocol.Register do
