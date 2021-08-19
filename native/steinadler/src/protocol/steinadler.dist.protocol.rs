@@ -16,15 +16,26 @@ pub struct Pid {
     pub pid: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SpawnOpts {
+    #[prost(string, repeated, tag = "1")]
+    pub opts: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProcessRequest {
     #[prost(message, optional, tag = "1")]
     pub source: ::core::option::Option<Pid>,
-    #[prost(string, tag = "2")]
-    pub r#mod: ::prost::alloc::string::String,
+    #[prost(message, optional, tag = "2")]
+    pub opts: ::core::option::Option<SpawnOpts>,
     #[prost(string, tag = "3")]
+    pub r#mod: ::prost::alloc::string::String,
+    #[prost(string, tag = "4")]
     pub fun: ::prost::alloc::string::String,
-    #[prost(message, repeated, tag = "4")]
+    #[prost(message, repeated, tag = "5")]
     pub args: ::prost::alloc::vec::Vec<::prost_types::Any>,
+    #[prost(bool, tag = "6")]
+    pub r#async: bool,
+    #[prost(string, tag = "7")]
+    pub request_hash: ::prost::alloc::string::String,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ProcessResponse {
@@ -35,7 +46,7 @@ pub struct ProcessResponse {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Data {
-    #[prost(oneof = "data::Action", tags = "1, 2, 3")]
+    #[prost(oneof = "data::Action", tags = "1, 2, 3, 4")]
     pub action: ::core::option::Option<data::Action>,
 }
 /// Nested message and enum types in `Data`.
@@ -45,8 +56,10 @@ pub mod data {
         #[prost(message, tag = "1")]
         Register(super::Register),
         #[prost(message, tag = "2")]
-        Request(super::ProcessRequest),
+        Unregister(super::Register),
         #[prost(message, tag = "3")]
+        Request(super::ProcessRequest),
+        #[prost(message, tag = "4")]
         Response(super::ProcessResponse),
     }
 }

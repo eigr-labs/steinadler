@@ -5,10 +5,9 @@ defmodule Steinadler.Dist.Protocol.StreamServer do
   use GenServer
   require Logger
 
-  @doc false
-  def start_link(%{payload: %{pid: stream_pid}} = stream) do
-    GenServer.start_link(__MODULE__, stream, name: via(stream_pid))
-  end
+  alias Steinadler.Dist.Protocol.{Node, Register, ProcessRequest}
+
+  # Server API
 
   @impl true
   @spec init(%{:payload => %{:pid => pid}, optional(any) => any}) ::
@@ -25,6 +24,46 @@ defmodule Steinadler.Dist.Protocol.StreamServer do
     Logger.info("Stream closed with reason #{inspect(reason)} for stream #{stream_pid}")
 
     {:stop, :normal, state}
+  end
+
+  @impl true
+  def handle_call({:request, _req}, _from, state) do
+    {:reply, state, state}
+  end
+
+  @impl true
+  def handle_call({:register, _node}, _from, state) do
+    {:reply, state, state}
+  end
+
+  @impl true
+  def handle_cast({:unregister, _node}, state) do
+    {:noreply, state}
+  end
+
+  # Client API
+
+  @doc false
+  def start_link(%{payload: %{pid: stream_pid}} = stream) do
+    GenServer.start_link(__MODULE__, stream, name: via(stream_pid))
+  end
+
+  @spec forward(
+          {:register, Node.t()}
+          | {:unregister, Node.t()}
+          | {:request, ProcessRequest.t()},
+          %{:pid => any, optional(any) => any}
+        ) :: any
+  def forward({:register, node} = _message, stream_pid) do
+    GenServer.call(via(stream_pid), {:register, node})
+  end
+
+  def forward({:unregister, node} = _message, stream_pid) do
+    GenServer.cast(via(stream_pid), {:unregister, node})
+  end
+
+  def forward({:request, req} = _message, stream_pid) do
+    GenServer.call(via(stream_pid), {:request, req})
   end
 
   defp via(stream_pid) do

@@ -7,8 +7,10 @@ defmodule Steinadler do
 
   @impl true
   def init(args) do
-    Application.put_env(:grpc, :start_server, true, persistent: true)
     port = Keyword.get(args, :default_port, 4_000)
+    Application.put_env(:grpc, :start_server, true, persistent: true)
+    Application.put_env(:steinadler, :grpc_port, port, persistent: true)
+
     local_node = Node.self()
     Logger.debug("Starting node #{inspect(local_node)}")
 

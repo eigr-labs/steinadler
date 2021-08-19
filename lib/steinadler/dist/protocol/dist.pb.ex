@@ -80,17 +80,40 @@ defmodule Steinadler.Dist.Protocol.PID do
   field :pid, 1, type: :string
 end
 
+defmodule Steinadler.Dist.Protocol.SpawnOpts do
+  @moduledoc false
+  use Protobuf, syntax: :proto3
+
+  @type t :: %__MODULE__{
+          opts: [String.t()]
+        }
+  defstruct [:opts]
+
+  def descriptor do
+    # credo:disable-for-next-line
+    Elixir.Google.Protobuf.DescriptorProto.decode(
+      <<10, 9, 83, 112, 97, 119, 110, 79, 112, 116, 115, 18, 18, 10, 4, 111, 112, 116, 115, 24, 1,
+        32, 3, 40, 9, 82, 4, 111, 112, 116, 115>>
+    )
+  end
+
+  field :opts, 1, repeated: true, type: :string
+end
+
 defmodule Steinadler.Dist.Protocol.ProcessRequest do
   @moduledoc false
   use Protobuf, syntax: :proto3
 
   @type t :: %__MODULE__{
           source: Steinadler.Dist.Protocol.PID.t() | nil,
+          opts: Steinadler.Dist.Protocol.SpawnOpts.t() | nil,
           mod: String.t(),
           fun: String.t(),
-          args: [Google.Protobuf.Any.t()]
+          args: [Google.Protobuf.Any.t()],
+          async: boolean,
+          request_hash: String.t()
         }
-  defstruct [:source, :mod, :fun, :args]
+  defstruct [:source, :opts, :mod, :fun, :args, :async, :request_hash]
 
   def descriptor do
     # credo:disable-for-next-line
@@ -98,18 +121,26 @@ defmodule Steinadler.Dist.Protocol.ProcessRequest do
       <<10, 14, 80, 114, 111, 99, 101, 115, 115, 82, 101, 113, 117, 101, 115, 116, 18, 53, 10, 6,
         115, 111, 117, 114, 99, 101, 24, 1, 32, 1, 40, 11, 50, 29, 46, 115, 116, 101, 105, 110,
         97, 100, 108, 101, 114, 46, 100, 105, 115, 116, 46, 112, 114, 111, 116, 111, 99, 111, 108,
-        46, 80, 73, 68, 82, 6, 115, 111, 117, 114, 99, 101, 18, 16, 10, 3, 109, 111, 100, 24, 2,
-        32, 1, 40, 9, 82, 3, 109, 111, 100, 18, 16, 10, 3, 102, 117, 110, 24, 3, 32, 1, 40, 9, 82,
-        3, 102, 117, 110, 18, 40, 10, 4, 97, 114, 103, 115, 24, 4, 32, 3, 40, 11, 50, 20, 46, 103,
-        111, 111, 103, 108, 101, 46, 112, 114, 111, 116, 111, 98, 117, 102, 46, 65, 110, 121, 82,
-        4, 97, 114, 103, 115>>
+        46, 80, 73, 68, 82, 6, 115, 111, 117, 114, 99, 101, 18, 55, 10, 4, 111, 112, 116, 115, 24,
+        2, 32, 1, 40, 11, 50, 35, 46, 115, 116, 101, 105, 110, 97, 100, 108, 101, 114, 46, 100,
+        105, 115, 116, 46, 112, 114, 111, 116, 111, 99, 111, 108, 46, 83, 112, 97, 119, 110, 79,
+        112, 116, 115, 82, 4, 111, 112, 116, 115, 18, 16, 10, 3, 109, 111, 100, 24, 3, 32, 1, 40,
+        9, 82, 3, 109, 111, 100, 18, 16, 10, 3, 102, 117, 110, 24, 4, 32, 1, 40, 9, 82, 3, 102,
+        117, 110, 18, 40, 10, 4, 97, 114, 103, 115, 24, 5, 32, 3, 40, 11, 50, 20, 46, 103, 111,
+        111, 103, 108, 101, 46, 112, 114, 111, 116, 111, 98, 117, 102, 46, 65, 110, 121, 82, 4,
+        97, 114, 103, 115, 18, 20, 10, 5, 97, 115, 121, 110, 99, 24, 6, 32, 1, 40, 8, 82, 5, 97,
+        115, 121, 110, 99, 18, 33, 10, 12, 114, 101, 113, 117, 101, 115, 116, 95, 104, 97, 115,
+        104, 24, 7, 32, 1, 40, 9, 82, 11, 114, 101, 113, 117, 101, 115, 116, 72, 97, 115, 104>>
     )
   end
 
   field :source, 1, type: Steinadler.Dist.Protocol.PID
-  field :mod, 2, type: :string
-  field :fun, 3, type: :string
-  field :args, 4, repeated: true, type: Google.Protobuf.Any
+  field :opts, 2, type: Steinadler.Dist.Protocol.SpawnOpts
+  field :mod, 3, type: :string
+  field :fun, 4, type: :string
+  field :args, 5, repeated: true, type: Google.Protobuf.Any
+  field :async, 6, type: :bool
+  field :request_hash, 7, type: :string
 end
 
 defmodule Steinadler.Dist.Protocol.ProcessResponse do
@@ -154,22 +185,27 @@ defmodule Steinadler.Dist.Protocol.Data do
       <<10, 4, 68, 97, 116, 97, 18, 64, 10, 8, 114, 101, 103, 105, 115, 116, 101, 114, 24, 1, 32,
         1, 40, 11, 50, 34, 46, 115, 116, 101, 105, 110, 97, 100, 108, 101, 114, 46, 100, 105, 115,
         116, 46, 112, 114, 111, 116, 111, 99, 111, 108, 46, 82, 101, 103, 105, 115, 116, 101, 114,
-        72, 0, 82, 8, 114, 101, 103, 105, 115, 116, 101, 114, 18, 68, 10, 7, 114, 101, 113, 117,
-        101, 115, 116, 24, 2, 32, 1, 40, 11, 50, 40, 46, 115, 116, 101, 105, 110, 97, 100, 108,
-        101, 114, 46, 100, 105, 115, 116, 46, 112, 114, 111, 116, 111, 99, 111, 108, 46, 80, 114,
-        111, 99, 101, 115, 115, 82, 101, 113, 117, 101, 115, 116, 72, 0, 82, 7, 114, 101, 113,
-        117, 101, 115, 116, 18, 71, 10, 8, 114, 101, 115, 112, 111, 110, 115, 101, 24, 3, 32, 1,
-        40, 11, 50, 41, 46, 115, 116, 101, 105, 110, 97, 100, 108, 101, 114, 46, 100, 105, 115,
-        116, 46, 112, 114, 111, 116, 111, 99, 111, 108, 46, 80, 114, 111, 99, 101, 115, 115, 82,
-        101, 115, 112, 111, 110, 115, 101, 72, 0, 82, 8, 114, 101, 115, 112, 111, 110, 115, 101,
-        66, 8, 10, 6, 97, 99, 116, 105, 111, 110>>
+        72, 0, 82, 8, 114, 101, 103, 105, 115, 116, 101, 114, 18, 68, 10, 10, 117, 110, 114, 101,
+        103, 105, 115, 116, 101, 114, 24, 2, 32, 1, 40, 11, 50, 34, 46, 115, 116, 101, 105, 110,
+        97, 100, 108, 101, 114, 46, 100, 105, 115, 116, 46, 112, 114, 111, 116, 111, 99, 111, 108,
+        46, 82, 101, 103, 105, 115, 116, 101, 114, 72, 0, 82, 10, 117, 110, 114, 101, 103, 105,
+        115, 116, 101, 114, 18, 68, 10, 7, 114, 101, 113, 117, 101, 115, 116, 24, 3, 32, 1, 40,
+        11, 50, 40, 46, 115, 116, 101, 105, 110, 97, 100, 108, 101, 114, 46, 100, 105, 115, 116,
+        46, 112, 114, 111, 116, 111, 99, 111, 108, 46, 80, 114, 111, 99, 101, 115, 115, 82, 101,
+        113, 117, 101, 115, 116, 72, 0, 82, 7, 114, 101, 113, 117, 101, 115, 116, 18, 71, 10, 8,
+        114, 101, 115, 112, 111, 110, 115, 101, 24, 4, 32, 1, 40, 11, 50, 41, 46, 115, 116, 101,
+        105, 110, 97, 100, 108, 101, 114, 46, 100, 105, 115, 116, 46, 112, 114, 111, 116, 111, 99,
+        111, 108, 46, 80, 114, 111, 99, 101, 115, 115, 82, 101, 115, 112, 111, 110, 115, 101, 72,
+        0, 82, 8, 114, 101, 115, 112, 111, 110, 115, 101, 66, 8, 10, 6, 97, 99, 116, 105, 111,
+        110>>
     )
   end
 
   oneof :action, 0
   field :register, 1, type: Steinadler.Dist.Protocol.Register, oneof: 0
-  field :request, 2, type: Steinadler.Dist.Protocol.ProcessRequest, oneof: 0
-  field :response, 3, type: Steinadler.Dist.Protocol.ProcessResponse, oneof: 0
+  field :unregister, 2, type: Steinadler.Dist.Protocol.Register, oneof: 0
+  field :request, 3, type: Steinadler.Dist.Protocol.ProcessRequest, oneof: 0
+  field :response, 4, type: Steinadler.Dist.Protocol.ProcessResponse, oneof: 0
 end
 
 defmodule Steinadler.Dist.Protocol.DistributionProtocol.Service do
