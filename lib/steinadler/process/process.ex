@@ -6,6 +6,7 @@ defmodule Steinadler.Process do
   use Retry
   require Logger
 
+  import Steinadler.Dist.Protocol.TypeConversions
   alias Steinadler.Dist.Protocol.ProcessRequest
 
   @impl true
@@ -48,9 +49,7 @@ defmodule Steinadler.Process do
     GenServer.call(__MODULE__, {:handle, request}, 35000)
   end
 
-  defp parse_arguments(_args) do
-    []
-  end
+  defp parse_arguments(args), do: args |> Enum.map(&from/1)
 
   defp handle_result(res) do
     {:ok, res}
