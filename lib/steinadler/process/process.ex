@@ -9,6 +9,15 @@ defmodule Steinadler.Process do
   import Steinadler.Dist.Protocol.TypeConversions
   alias Steinadler.Dist.Protocol.ProcessRequest
 
+  def child_spec(opts) do
+    %{
+      id: __MODULE__,
+      start: {__MODULE__, :start_link, [opts]},
+      shutdown: 60_000,
+      restart: :transient
+    }
+  end
+
   @impl true
   @spec init(any) :: {:ok, any}
   def init(state) do
@@ -30,12 +39,14 @@ defmodule Steinadler.Process do
 
     spawn(fn ->
       res =
-        retry with: exponential_backoff() |> cap(1_000) |> expiry(30_000) do
+        retry with: exponential_backoff() |> cap(1_000) |> expiry(15_000) do
           apply(module, function, arguments)
         after
-          result -> result
+          result ->
+            {:ok, result}
         else
-          error -> error
+          error ->
+            {:error, error}
         end
 
       GenServer.reply(from, handle_result(res))
@@ -44,14 +55,19 @@ defmodule Steinadler.Process do
     {:noreply, state}
   end
 
+  @doc false
+  def start_link(state) do
+    GenServer.start_link(__MODULE__, state, name: __MODULE__)
+  end
+
   @spec handle(Steinadler.Dist.Protocol.ProcessRequest.t()) :: any
   def handle(%ProcessRequest{} = request) do
-    GenServer.call(__MODULE__, {:handle, request}, 35000)
+    GenServer.call(__MODULE__, {:handle, request}, 45000)
   end
 
   defp parse_arguments(args), do: args |> Enum.map(&from/1)
 
   defp handle_result(res) do
-    {:ok, res}
+    res
   end
 end

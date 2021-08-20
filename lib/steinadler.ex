@@ -18,6 +18,7 @@ defmodule Steinadler do
     init_db()
 
     children = [
+      {Steinadler.Process.Supervisor, []},
       {Registry, keys: :unique, name: Steinadler.Registry},
       {GRPC.Server.Supervisor, get_grpc_options(port)},
       cluster_supervisor(args)

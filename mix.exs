@@ -14,7 +14,7 @@ defmodule Steinadler.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger]
+      extra_applications: [:logger, :retry]
     ]
   end
 
@@ -26,6 +26,7 @@ defmodule Steinadler.MixProject do
       {:google_protos, "~> 0.1.0"},
       {:grpc, "~> 0.5.0-beta.1"},
       {:libcluster, "~> 3.3"},
+      {:poison, "~> 5.0"},
       {:retry, "~> 0.14"},
       {:rustler, "~> 0.22"}
     ]

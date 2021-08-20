@@ -1,5 +1,5 @@
 {application,steinadler,
-             [{applications,[kernel,stdlib,elixir,logger,retry,cachex,
+             [{applications,[kernel,stdlib,elixir,logger,retry,cachex,poison,
                              libcluster,cowlib,google_protos,rustler,grpc]},
               {description,"steinadler"},
               {modules,['Elixir.Steinadler',
@@ -21,6 +21,7 @@
                         'Elixir.Steinadler.LocalNode',
                         'Elixir.Steinadler.Native','Elixir.Steinadler.Node',
                         'Elixir.Steinadler.NodeBehaviour',
-                        'Elixir.Steinadler.Process']},
+                        'Elixir.Steinadler.Process',
+                        'Elixir.Steinadler.Process.Supervisor']},
               {registered,[]},
               {vsn,"0.1.0"}]}.
