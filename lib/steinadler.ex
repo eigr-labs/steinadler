@@ -10,9 +10,12 @@ defmodule Steinadler do
     port = Keyword.get(args, :default_port, 4_000)
     Application.put_env(:grpc, :start_server, true, persistent: true)
     Application.put_env(:steinadler, :grpc_port, port, persistent: true)
+    Application.ensure_started(:retry)
 
     local_node = Node.self()
     Logger.debug("Starting node #{inspect(local_node)}")
+
+    init_db()
 
     children = [
       {Registry, keys: :unique, name: Steinadler.Registry},
@@ -102,6 +105,10 @@ defmodule Steinadler do
         ]
       ]
     ]
+  end
+
+  defp init_db() do
+    :ets.new(:nodes, [:named_table, :set, :public, read_concurrency: true])
   end
 
   defmodule LocalNode do

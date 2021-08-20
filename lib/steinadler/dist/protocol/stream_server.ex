@@ -27,17 +27,28 @@ defmodule Steinadler.Dist.Protocol.StreamServer do
   end
 
   @impl true
-  def handle_call({:request, _req}, _from, state) do
+  def handle_call({:request, req}, _from, state) do
+    Logger.debug("Received request: #{inspect(req)}")
     {:reply, :ok, state}
   end
 
   @impl true
-  def handle_call({:register, _node}, _from, state) do
+  def handle_call({:register, node}, _from, state) do
+    Logger.debug("Registering node: #{inspect(node)}")
+    :ets.insert(:nodes, {node.address, node})
     {:reply, :ok, state, :hibernate}
   end
 
   @impl true
-  def handle_cast({:unregister, _node}, state) do
+  def handle_cast({:unregister, node}, state) do
+    Logger.debug("Unregistering node: #{inspect(node)}")
+    key = node.address
+
+    case :ets.lookup(:nodes, key) do
+      [{^key, _node}] -> :ets.delete(:nodes, key)
+      [] -> Logger.warn("Nothing to do with key #{inspect(key)}")
+    end
+
     {:stop, :normal, state}
   end
 
