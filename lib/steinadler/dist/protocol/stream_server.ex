@@ -29,6 +29,16 @@ defmodule Steinadler.Dist.Protocol.StreamServer do
   @impl true
   def handle_call({:request, req}, _from, state) do
     Logger.debug("Received request: #{inspect(req)}")
+
+    with {:ok, res} <- Steinadler.Process.handle(req) do
+      # TODO: Generate ProcessResponse with success type and send to the caller
+      Logger.debug("Success on execute function. Response: #{inspect(res)}")
+    else
+      {:error, cause} ->
+        # TODO: Generate ProcessResponse with error type and send to the caller
+        Logger.debug("Error on execute function. Cause: #{inspect(cause)}")
+    end
+
     {:reply, :ok, state}
   end
 
