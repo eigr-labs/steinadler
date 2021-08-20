@@ -3,6 +3,7 @@ defmodule Steinadler.Process do
 
   """
   use GenServer
+  use Retry
   require Logger
 
   alias Steinadler.Dist.Protocol.ProcessRequest
@@ -27,7 +28,15 @@ defmodule Steinadler.Process do
     arguments = parse_arguments(args)
 
     spawn(fn ->
-      res = apply(module, function, arguments)
+      res =
+        retry with: exponential_backoff() |> cap(1_000) |> expiry(30_000) do
+          apply(module, function, arguments)
+        after
+          result -> result
+        else
+          error -> error
+        end
+
       GenServer.reply(from, handle_result(res))
     end)
 
@@ -36,7 +45,7 @@ defmodule Steinadler.Process do
 
   @spec handle(Steinadler.Dist.Protocol.ProcessRequest.t()) :: any
   def handle(%ProcessRequest{} = request) do
-    GenServer.call(__MODULE__, {:handle, request})
+    GenServer.call(__MODULE__, {:handle, request}, 35000)
   end
 
   defp parse_arguments(_args) do
