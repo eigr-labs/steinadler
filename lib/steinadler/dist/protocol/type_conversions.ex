@@ -40,6 +40,6 @@ defmodule Steinadler.Dist.Protocol.TypeConversions do
 
   def from(%Any{type_url: type_url, value: _value} = _any)
       when type_url == "type.googleapis.com/struct" do
-    # Todo: parse structs
+    # Todo: parse structs. Maybe using Json?
   end
 end
