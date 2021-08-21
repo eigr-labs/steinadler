@@ -74,11 +74,14 @@ iex(node1@127.0.0.1)5> spawn(:all, Test, :hello, ["world"]) end)
 - [ ] Send messages to named process.
 - [x] Supported Types
     - [x] Atoms
-    - [ ] Binaries
+    - [x] Booleans
+    - [ ] Bytes
     - [x] Floats
     - [x] Integers
     - [x] Lists
     - [x] Maps
+    - [ ] PIDs
+    - [ ] References
     - [x] Strings
     - [x] Structs
 - [ ] Cluster Registry

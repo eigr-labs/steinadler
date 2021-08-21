@@ -7,6 +7,9 @@ defmodule Steinadler.Dist.Protocol.TypeConversions do
   def convert(value) when is_atom(value),
     do: Any.new(type_url: "type.googleapis.com/atom", value: Atom.to_string(value))
 
+  def convert(value) when is_boolean(value),
+    do: Any.new(type_url: "type.googleapis.com/boolean", value: Kernel.to_string(value))
+
   def convert(value) when is_integer(value),
     do: Any.new(type_url: "type.googleapis.com/integer", value: Integer.to_string(value))
 
@@ -40,6 +43,10 @@ defmodule Steinadler.Dist.Protocol.TypeConversions do
       do: String.to_existing_atom(value)
 
   def from(%Any{type_url: type_url, value: value} = _any)
+      when type_url == "type.googleapis.com/boolean",
+      do: to_boolean(value)
+
+  def from(%Any{type_url: type_url, value: value} = _any)
       when type_url == "type.googleapis.com/integer" do
     {r, _} = Integer.parse(value)
     r
@@ -62,4 +69,7 @@ defmodule Steinadler.Dist.Protocol.TypeConversions do
       when type_url == "type.googleapis.com/list" do
     Poison.decode!(value)
   end
+
+  defp to_boolean("true"), do: true
+  defp to_boolean("false"), do: false
 end
