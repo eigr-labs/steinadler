@@ -39,12 +39,13 @@ iex(1)> Steinadler.start_link([cluster_strategy: :gossip, default_port: 4002])
  
 ```
 
-Call module in remote Node:
+Call function in remote Node:
 
 ```sh
 iex(node1@127.0.0.1)1> # Execute code in all Nodes  
 nil
 iex(node1@127.0.0.1)2> import Steinadler.Node
+
 iex(node1@127.0.0.1)3> list() |> Enum.map(fn node -> spawn(node, Test, :hello, ["world"]) end)
 
 iex(node1@127.0.0.1)4> # Or
@@ -77,9 +78,9 @@ iex(node1@127.0.0.1)5> spawn(:all, Test, :hello, ["world"]) end)
     - [x] Floats
     - [x] Integers
     - [ ] Lists
-    - [ ] Maps
+    - [x] Maps
     - [x] Strings
-    - [ ] Structs
+    - [x] Structs
 - [ ] Cluster Registry
 - [ ] Cluster DynamicSupervisor
 - [ ] StreamRef ***(Reactive Streams over Network)***

@@ -13,6 +13,14 @@ defmodule Steinadler.Dist.Protocol.TypeConversions do
   def convert(value) when is_float(value),
     do: Any.new(type_url: "type.googleapis.com/float", value: Float.to_string(value))
 
+  def convert(value) when is_struct(value) do
+    type_url = "type.googleapis.com/struct+json;#{value.__struct__}"
+    Any.new(type_url: type_url, value: Poison.encode!(value))
+  end
+
+  def convert(value) when is_map(value),
+    do: Any.new(type_url: "type.googleapis.com/string+json", value: Poison.encode!(value))
+
   @spec from(Google.Protobuf.Any.t()) :: any
   def from(%Any{type_url: type_url, value: value} = _any)
       when type_url == "type.googleapis.com/string",
@@ -34,8 +42,10 @@ defmodule Steinadler.Dist.Protocol.TypeConversions do
     r
   end
 
-  def from(%Any{type_url: type_url, value: _value} = _any)
-      when type_url == "type.googleapis.com/struct" do
-    # Todo: parse structs. Maybe using Json?
-  end
+  def from(%Any{type_url: type_url, value: value} = _any)
+      when type_url == "type.googleapis.com/string+json",
+      do: Poison.decode!(value)
+
+  def from(%Any{type_url: "type.googleapis.com/struct+json;" <> type, value: value} = _any),
+    do: Poison.decode!(value, as: String.to_existing_atom(type))
 end
