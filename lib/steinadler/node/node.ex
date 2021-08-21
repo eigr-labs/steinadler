@@ -2,16 +2,44 @@ defmodule Steinadler.Node do
   @moduledoc """
   `Steinadler.Node`
   """
+  require Logger
+
   @behaviour Steinadler.NodeBehaviour
 
   import Steinadler.Dist.Protocol.TypeConversions
   alias Steinadler.Dist.Protocol.{PID, ProcessRequest}
+  alias Steinadler.Native
+
+  @impl true
+  @spec start(any) :: :ok
+  def start(_args) do
+    :ets.new(:nodes, [:named_table, :set, :public, read_concurrency: true])
+    :ok
+  end
 
   @impl true
   @spec list :: [atom()]
   def list() do
     :ets.tab2list(:nodes)
     |> Enum.map(fn {address, _node} -> String.to_existing_atom(address) end)
+  end
+
+  @impl true
+  @spec connect(atom()) :: boolean()
+  def connect(address) do
+    [name, fqdn] = String.split(Atom.to_string(address), "@")
+    Logger.debug("Connecting with Node: #{inspect(name)}. On Address: #{inspect(fqdn)}")
+    spawn_link(fn -> Native.register(name, fqdn, 4000) end)
+    true
+  end
+
+  @impl true
+  @spec disconnect(atom()) :: boolean()
+  def disconnect(address) do
+    [name, fqdn] = String.split(Atom.to_string(address), "@")
+    Logger.debug("Disconnecting from Node: #{inspect(name)}. On Address: #{inspect(fqdn)}")
+    Native.unregister(name)
+    true
   end
 
   @impl true

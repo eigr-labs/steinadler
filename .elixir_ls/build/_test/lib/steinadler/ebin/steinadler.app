@@ -18,7 +18,6 @@
                         'Elixir.Steinadler.Dist.Protocol.StreamServer',
                         'Elixir.Steinadler.Dist.Protocol.StreamSupervisor',
                         'Elixir.Steinadler.Dist.Protocol.TypeConversions',
-                        'Elixir.Steinadler.LocalNode',
                         'Elixir.Steinadler.Native','Elixir.Steinadler.Node',
                         'Elixir.Steinadler.NodeBehaviour',
                         'Elixir.Steinadler.Process',

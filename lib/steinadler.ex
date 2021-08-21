@@ -15,7 +15,7 @@ defmodule Steinadler do
     local_node = Node.self()
     Logger.debug("Starting node #{inspect(local_node)}")
 
-    init_db()
+    Steinadler.Node.start(args)
 
     children = [
       {Steinadler.Process.Supervisor, []},
@@ -72,13 +72,13 @@ defmodule Steinadler do
         strategy: Cluster.Strategy.Gossip,
         # The function to use for connecting nodes. The node
         # name will be appended to the argument list. Optional
-        connect: {Steinadler.LocalNode, :register, []},
+        connect: {Steinadler.Node, :connect, []},
         # The function to use for disconnecting nodes. The node
         # name will be appended to the argument list. Optional
-        disconnect: {Steinadler.LocalNode, :unregister, []},
+        disconnect: {Steinadler.Node, :disconnect, []},
         # The function to use for listing nodes.
         # This function must return a list of node names. Optional
-        list_nodes: {:erlang, :nodes, [:connected]}
+        list_nodes: {Steinadler.Node, :list, []}
       ]
     ]
 
@@ -92,13 +92,13 @@ defmodule Steinadler do
         strategy: Elixir.Cluster.Strategy.Kubernetes.DNS,
         # The function to use for connecting nodes. The node
         # name will be appended to the argument list. Optional
-        connect: {Steinadler.LocalNode, :register, []},
+        connect: {Steinadler.Node, :connect, []},
         # The function to use for disconnecting nodes. The node
         # name will be appended to the argument list. Optional
-        disconnect: {Steinadler.LocalNode, :unregister, []},
+        disconnect: {Steinadler.Node, :disconnect, []},
         # The function to use for listing nodes.
         # This function must return a list of node names. Optional
-        list_nodes: {:erlang, :nodes, [:connected]},
+        list_nodes: {Steinadler.Node, :list, []},
         config: [
           service: service,
           application_name: application_name,
@@ -106,34 +106,5 @@ defmodule Steinadler do
         ]
       ]
     ]
-  end
-
-  defp init_db() do
-    :ets.new(:nodes, [:named_table, :set, :public, read_concurrency: true])
-  end
-
-  defmodule LocalNode do
-    require Logger
-    alias Steinadler.Native
-
-    @spec start_node(String.t(), String.t(), integer()) :: any()
-    def start_node(_name, address, port),
-      do: spawn_link(fn -> Native.start_node(address, port) end)
-
-    @spec register(atom()) :: boolean()
-    def register(address) do
-      [name, fqdn] = String.split(Atom.to_string(address), "@")
-      Logger.debug("Connecting with Node: #{inspect(name)}. On Address: #{inspect(fqdn)}")
-      spawn_link(fn -> Native.register(name, fqdn, 4000) end)
-      true
-    end
-
-    @spec unregister(atom()) :: boolean()
-    def unregister(address) do
-      [name, fqdn] = String.split(Atom.to_string(address), "@")
-      Logger.debug("Disconnecting from Node: #{inspect(name)}. On Address: #{inspect(fqdn)}")
-      Native.unregister(name)
-      true
-    end
   end
 end
