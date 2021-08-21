@@ -19,11 +19,6 @@ mod atoms {
 fn register_node(_name: String, _port: i64) {}
 
 #[rustler::nif(schedule = "DirtyCpu")]
-fn start_node(address: String, port: i64) {
-    Server::new().address(address).port(port).bind().unwrap();
-}
-
-#[rustler::nif(schedule = "DirtyCpu")]
 fn register(name: String, address: String, port: i64) {
     Server::new()
         .name(name)
@@ -38,7 +33,4 @@ fn unregister(_name: String) -> Atom {
     atoms::ok()
 }
 
-rustler::init!(
-    "Elixir.Steinadler.Native",
-    [start_node, register, unregister]
-);
+rustler::init!("Elixir.Steinadler.Native", [register, unregister]);
