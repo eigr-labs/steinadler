@@ -39,6 +39,29 @@ iex(1)> Steinadler.start_link([cluster_strategy: :gossip, default_port: 4002])
  
 ```
 
+Call module in remote Node:
+
+```sh
+iex(node1@127.0.0.1)1> # Execute code in all Nodes  
+nil
+iex(node1@127.0.0.1)2> import Steinadler.Node
+iex(node1@127.0.0.1)3> list() |> Enum.map(fn node -> spawn(node, Test, :hello, ["world"]) end)
+
+iex(node1@127.0.0.1)4> # Or
+nil
+iex(node1@127.0.0.1)5> spawn(:all, Test, :hello, ["world"]) end)
+```
+
+## Features
+
+* Node discovery. ✓
+* Tls support. ✓
+* Cookie support. 
+* Execute functions in one, all or some nodes. ✓
+* Send messages to named process.
+* Backpressure.
+* Retry with backoff. ✓
+
 ## Project Status
 
 - [x] Node discovery
@@ -46,14 +69,19 @@ iex(1)> Steinadler.start_link([cluster_strategy: :gossip, default_port: 4002])
 - [ ] gRPC Client
 - [x] Execution of Functions on Remote Node
 - [x] Caching of function arguments
-- [x] Type Conversions
-    - [x] String
+- [ ] Node labels.
+- [ ] Send messages to named process.
+- [x] Supported Types
     - [x] Atoms
-    - [x] Integer
-    - [x] Float
-    - [ ] List
-    - [ ] Map
+    - [ ] Binaries
+    - [x] Floats
+    - [x] Integers
+    - [ ] Lists
+    - [ ] Maps
+    - [x] Strings
     - [ ] Structs
+- [ ] Cluster Registry
+- [ ] Cluster DynamicSupervisor
 
 ## Benchmark
 
