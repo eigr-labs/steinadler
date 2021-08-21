@@ -27,30 +27,24 @@ defmodule Steinadler.Process do
   @impl true
   def handle_call(
         {:handle,
-         %ProcessRequest{mod: mod, fun: fun, args: args, request_hash: _key, async: _async} =
+         %ProcessRequest{mod: mod, fun: fun, args: args, request_hash: key, async: _async} =
            _request},
         from,
         state
       ) do
-    # TODO: Cached this conversion work
-    module = String.to_existing_atom(mod)
-    function = String.to_existing_atom(fun)
-    arguments = parse_arguments(args)
-
-    spawn(fn ->
-      res =
-        retry with: exponential_backoff() |> cap(1_000) |> expiry(15_000) do
-          apply(module, function, arguments)
-        after
-          result ->
-            {:ok, result}
-        else
-          error ->
-            {:error, error}
-        end
-
-      GenServer.reply(from, handle_result(res))
-    end)
+    with {:ok, %{module: module, function: function, arguments: arguments}} <-
+           Cachex.get(:function_calls, key) do
+      Logger.debug("Found params on cache with key #{inspect(key)}")
+      send(from, module, function, arguments)
+    else
+      _ ->
+        module = String.to_existing_atom(mod)
+        function = String.to_existing_atom(fun)
+        arguments = parse_arguments(args)
+        params = %{module: module, function: function, arguments: arguments}
+        Cachex.put(:function_calls, key, params)
+        send(from, module, function, arguments)
+    end
 
     {:noreply, state}
   end
@@ -66,6 +60,23 @@ defmodule Steinadler.Process do
   end
 
   defp parse_arguments(args), do: args |> Enum.map(&from/1)
+
+  defp send(from, module, function, arguments) do
+    spawn(fn ->
+      res =
+        retry with: exponential_backoff() |> cap(1_000) |> expiry(15_000) do
+          apply(module, function, arguments)
+        after
+          result ->
+            {:ok, result}
+        else
+          error ->
+            {:error, error}
+        end
+
+      GenServer.reply(from, handle_result(res))
+    end)
+  end
 
   defp handle_result(res) do
     res

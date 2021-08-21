@@ -3,6 +3,7 @@ defmodule Steinadler do
   `Steinadler`.
   """
   use Supervisor
+  import Cachex.Spec
   require Logger
 
   @impl true
@@ -18,6 +19,22 @@ defmodule Steinadler do
     Steinadler.Node.start(args)
 
     children = [
+      {Cachex,
+       [
+         name: :function_calls,
+         compressed: true,
+         expiration:
+           expiration(
+             # default record expiration
+             default: :timer.minutes(3),
+
+             # how often cleanup should occur
+             interval: :timer.seconds(30),
+
+             # whether to enable lazy checking
+             lazy: true
+           )
+       ]},
       {Steinadler.Process.Supervisor, []},
       {Registry, keys: :unique, name: Steinadler.Registry},
       {GRPC.Server.Supervisor, get_grpc_options(port)},
