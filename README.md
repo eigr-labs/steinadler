@@ -77,7 +77,7 @@ iex(node1@127.0.0.1)5> spawn(:all, Test, :hello, ["world"]) end)
     - [ ] Binaries
     - [x] Floats
     - [x] Integers
-    - [ ] Lists
+    - [x] Lists
     - [x] Maps
     - [x] Strings
     - [x] Structs

@@ -21,6 +21,15 @@ defmodule Steinadler.Dist.Protocol.TypeConversions do
   def convert(value) when is_map(value),
     do: Any.new(type_url: "type.googleapis.com/string+json", value: Poison.encode!(value))
 
+  def convert(value) when is_list(value),
+    do:
+      Any.new(
+        type_url: "type.googleapis.com/list",
+        value:
+          Poison.Encoder.encode(value, %{})
+          |> IO.iodata_to_binary()
+      )
+
   @spec from(Google.Protobuf.Any.t()) :: any
   def from(%Any{type_url: type_url, value: value} = _any)
       when type_url == "type.googleapis.com/string",
@@ -48,4 +57,9 @@ defmodule Steinadler.Dist.Protocol.TypeConversions do
 
   def from(%Any{type_url: "type.googleapis.com/struct+json;" <> type, value: value} = _any),
     do: Poison.decode!(value, as: String.to_existing_atom(type))
+
+  def from(%Any{type_url: type_url, value: value} = _any)
+      when type_url == "type.googleapis.com/list" do
+    Poison.decode!(value)
+  end
 end
