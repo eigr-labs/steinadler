@@ -82,6 +82,7 @@ iex(node1@127.0.0.1)5> spawn(:all, Test, :hello, ["world"]) end)
     - [ ] Structs
 - [ ] Cluster Registry
 - [ ] Cluster DynamicSupervisor
+- [ ] StreamRef ***(Reactive Streams over Network)***
 
 ## Benchmark
 
