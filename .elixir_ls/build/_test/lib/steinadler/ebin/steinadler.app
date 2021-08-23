@@ -1,6 +1,7 @@
 {application,steinadler,
              [{applications,[kernel,stdlib,elixir,logger,retry,cachex,poison,
-                             libcluster,cowlib,google_protos,rustler,grpc]},
+                             libcluster,flow,cowlib,google_protos,rustler,
+                             grpc]},
               {description,"steinadler"},
               {modules,['Elixir.Steinadler',
                         'Elixir.Steinadler.Dist.Protocol.Data',
@@ -21,6 +22,7 @@
                         'Elixir.Steinadler.Native','Elixir.Steinadler.Node',
                         'Elixir.Steinadler.NodeBehaviour',
                         'Elixir.Steinadler.Process',
-                        'Elixir.Steinadler.Process.Supervisor']},
+                        'Elixir.Steinadler.Process.Supervisor',
+                        'Elixir.Steinadler.StreamRef']},
               {registered,[]},
               {vsn,"0.1.0"}]}.

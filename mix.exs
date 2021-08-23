@@ -23,6 +23,7 @@ defmodule Steinadler.MixProject do
     [
       {:cachex, "~> 3.4"},
       {:cowlib, "~> 2.9.0", override: true},
+      {:flow, "~> 1.1"},
       {:google_protos, "~> 0.1.0"},
       {:grpc, "~> 0.5.0-beta.1"},
       {:libcluster, "~> 3.3"},

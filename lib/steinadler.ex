@@ -18,6 +18,8 @@ defmodule Steinadler do
 
     Steinadler.Node.start(args)
 
+    Flow.from_enumerable()
+
     children = [
       {Cachex,
        [

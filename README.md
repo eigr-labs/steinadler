@@ -62,6 +62,7 @@ iex(node1@127.0.0.1)5> spawn(:all, Test, :hello, ["world"]) end)
 * Send messages to named process.
 * Backpressure.
 * Retry with backoff. ✓
+* Stream over Network (StreamRef)
 
 ## Project Status
 
