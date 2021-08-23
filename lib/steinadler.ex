@@ -18,8 +18,6 @@ defmodule Steinadler do
 
     Steinadler.Node.start(args)
 
-    Flow.from_enumerable()
-
     children = [
       {Cachex,
        [
@@ -39,6 +37,7 @@ defmodule Steinadler do
        ]},
       {Steinadler.Process.Supervisor, []},
       {Registry, keys: :unique, name: Steinadler.Registry},
+      {DynamicSupervisor, strategy: :one_for_one, name: Steinadler.DynamicSupervisor},
       {GRPC.Server.Supervisor, get_grpc_options(port)},
       cluster_supervisor(args)
     ]

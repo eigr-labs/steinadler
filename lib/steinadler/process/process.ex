@@ -1,7 +1,5 @@
 defmodule Steinadler.Process do
-  @moduledoc """
-
-  """
+  @moduledoc false
   use GenServer
   use Retry
   require Logger

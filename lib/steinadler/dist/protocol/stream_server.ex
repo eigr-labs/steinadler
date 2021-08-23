@@ -87,7 +87,5 @@ defmodule Steinadler.Dist.Protocol.StreamServer do
     GenServer.call(via(stream_pid), {:request, req})
   end
 
-  defp via(stream_pid) do
-    {:via, Registry, {Steinadler.Registry, stream_pid}}
-  end
+  defp via(stream_pid), do: {:via, Registry, {Steinadler.Registry, {__MODULE__, stream_pid}}}
 end
