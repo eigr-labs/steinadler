@@ -33,4 +33,7 @@ fn unregister(_name: String) -> Atom {
     atoms::ok()
 }
 
-rustler::init!("Elixir.Steinadler.Native", [register, unregister]);
+rustler::init!(
+    "Elixir.Steinadler.Node.Client.Native",
+    [register, unregister]
+);

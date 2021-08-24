@@ -6,8 +6,11 @@ defmodule Steinadler do
   import Cachex.Spec
   require Logger
 
+  alias Injectx.Context
+
   @impl true
   def init(args) do
+    Context.from_config()
     port = Keyword.get(args, :default_port, 4_000)
     Application.put_env(:grpc, :start_server, true, persistent: true)
     Application.put_env(:steinadler, :grpc_port, port, persistent: true)

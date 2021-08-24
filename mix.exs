@@ -27,6 +27,7 @@ defmodule Steinadler.MixProject do
       {:gen_stage, "~> 1.1"},
       {:google_protos, "~> 0.1.0"},
       {:grpc, "~> 0.5.0-beta.1"},
+      {:injectx, "~> 0.1"},
       {:qex, "~> 0.5"},
       {:libcluster, "~> 3.3"},
       {:poison, "~> 5.0"},
