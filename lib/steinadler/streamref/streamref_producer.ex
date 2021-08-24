@@ -41,7 +41,7 @@ defmodule Steinadler.StreamRef.Producer do
     GenStage.start_link(__MODULE__, state, name: via(name))
   end
 
-  def add(name, events), do: GenServer.cast(via(name), {:add, events})
+  def add(name, events), do: GenStage.cast(via(name), {:add, events})
 
   defp via(name) do
     {:via, Registry, {Steinadler.Registry, {__MODULE__, name}}}

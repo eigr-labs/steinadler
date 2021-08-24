@@ -95,10 +95,14 @@ defmodule Steinadler.StreamRef do
 
             case DynamicSupervisor.start_child(Steinadler.DynamicSupervisor, child) do
               {:ok, producer_pid} ->
-                GenStage.demand(producer_pid, :accumulate)
+                window = Flow.Window.trigger_periodically(Flow.Window.global(), 100, :millisecond)
 
                 case __MODULE__.source(
-                       Flow.from_stages([producer_pid], stages: 1, buffer_size: :infinity),
+                       Flow.from_stages([producer_pid],
+                         stages: 1,
+                         buffer_size: :infinity,
+                         window: window
+                       ),
                        merge_opts
                      ) do
                   {:ok, flow} ->
@@ -106,7 +110,6 @@ defmodule Steinadler.StreamRef do
 
                     spawn_link(fn ->
                       Flow.run(flow)
-                      GenStage.demand(producer_pid, :forward)
                     end)
 
                   unknown ->
