@@ -50,15 +50,20 @@ defmodule Steinadler.StreamRef do
   On some node.
 
   ```elixir
-  SinkStreamRef.start_link([name: SinkStreamRef, as: :sink])
+  SinkStreamRef.start_link()
   ```
 
   On another node.
 
   ```elixir
-  SourceStreamRef.start_link([refname: "multiplier", as: :source])
-  # Generate
-  [2, 4, 6, 8, 10, ...]
+  SourceStreamRef.start_link()
+  # Print
+  2
+  4
+  6
+  8
+  10
+  ...
   ```
   """
 
