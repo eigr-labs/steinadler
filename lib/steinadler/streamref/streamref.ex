@@ -95,14 +95,17 @@ defmodule Steinadler.StreamRef do
 
             case DynamicSupervisor.start_child(Steinadler.DynamicSupervisor, child) do
               {:ok, producer_pid} ->
-                window = Flow.Window.trigger_periodically(Flow.Window.global(), 100, :millisecond)
+                window = Keyword.get(merge_opts, :window)
+
+                flow_opts =
+                  if is_nil(window) do
+                    [stages: 1, buffer_size: :infinity]
+                  else
+                    [stages: 1, buffer_size: :infinity, window: window]
+                  end
 
                 case __MODULE__.source(
-                       Flow.from_stages([producer_pid],
-                         stages: 1,
-                         buffer_size: :infinity,
-                         window: window
-                       ),
+                       Flow.from_stages([producer_pid], flow_opts),
                        merge_opts
                      ) do
                   {:ok, flow} ->
