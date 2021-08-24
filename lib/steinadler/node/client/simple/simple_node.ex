@@ -26,9 +26,18 @@ defmodule Steinadler.Node.Client.SimpleNode do
   @impl true
   @spec connect(atom()) :: boolean()
   def connect(address) do
-    [name, fqdn] = String.split(Atom.to_string(address), "@")
-    Logger.debug("Connecting with Node: #{inspect(name)}. On Address: #{inspect(fqdn)}")
-    # spawn_link(fn -> Native.register(name, fqdn, 4000) end)
+    child = {Steinadler.Node.Client.GrpcClient, %{clients: %{}}}
+
+    case DynamicSupervisor.start_child(Steinadler.DynamicSupervisor, child) do
+      {:ok, _pid} ->
+        [name, fqdn] = String.split(Atom.to_string(address), "@")
+        Logger.debug("Connecting with Node: #{inspect(name)}. On Address: #{inspect(fqdn)}")
+
+      # spawn_link(fn -> Native.register(name, fqdn, 4000) end)
+      _ ->
+        nil
+    end
+
     true
   end
 

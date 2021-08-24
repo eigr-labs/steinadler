@@ -52,5 +52,5 @@ message Data {
 }
 
 service DistributionProtocol {
-    rpc Handle(stream Data) returns (Data) {}
+    rpc Handle(stream Data) returns (stream Data) {}
 }

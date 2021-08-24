@@ -11,8 +11,8 @@ defmodule Steinadler.Dist.Protocol.Result do
     )
   end
 
-  field(:OK, 0)
-  field(:ERROR, 1)
+  field :OK, 0
+  field :ERROR, 1
 end
 
 defmodule Steinadler.Dist.Protocol.Node do
@@ -36,9 +36,9 @@ defmodule Steinadler.Dist.Protocol.Node do
     )
   end
 
-  field(:name, 1, type: :string)
-  field(:address, 2, type: :string)
-  field(:port, 3, type: :int32)
+  field :name, 1, type: :string
+  field :address, 2, type: :string
+  field :port, 3, type: :int32
 end
 
 defmodule Steinadler.Dist.Protocol.Register do
@@ -60,7 +60,7 @@ defmodule Steinadler.Dist.Protocol.Register do
     )
   end
 
-  field(:node, 1, type: Steinadler.Dist.Protocol.Node)
+  field :node, 1, type: Steinadler.Dist.Protocol.Node
 end
 
 defmodule Steinadler.Dist.Protocol.PID do
@@ -80,7 +80,7 @@ defmodule Steinadler.Dist.Protocol.PID do
     )
   end
 
-  field(:pid, 1, type: :string)
+  field :pid, 1, type: :string
 end
 
 defmodule Steinadler.Dist.Protocol.SpawnOpts do
@@ -100,7 +100,7 @@ defmodule Steinadler.Dist.Protocol.SpawnOpts do
     )
   end
 
-  field(:opts, 1, repeated: true, type: :string)
+  field :opts, 1, repeated: true, type: :string
 end
 
 defmodule Steinadler.Dist.Protocol.ProcessRequest do
@@ -137,13 +137,13 @@ defmodule Steinadler.Dist.Protocol.ProcessRequest do
     )
   end
 
-  field(:source, 1, type: Steinadler.Dist.Protocol.PID)
-  field(:opts, 2, type: Steinadler.Dist.Protocol.SpawnOpts)
-  field(:mod, 3, type: :string)
-  field(:fun, 4, type: :string)
-  field(:args, 5, repeated: true, type: Google.Protobuf.Any)
-  field(:async, 6, type: :bool)
-  field(:request_hash, 7, type: :string)
+  field :source, 1, type: Steinadler.Dist.Protocol.PID
+  field :opts, 2, type: Steinadler.Dist.Protocol.SpawnOpts
+  field :mod, 3, type: :string
+  field :fun, 4, type: :string
+  field :args, 5, repeated: true, type: Google.Protobuf.Any
+  field :async, 6, type: :bool
+  field :request_hash, 7, type: :string
 end
 
 defmodule Steinadler.Dist.Protocol.ProcessResponse do
@@ -169,8 +169,8 @@ defmodule Steinadler.Dist.Protocol.ProcessResponse do
     )
   end
 
-  field(:source, 1, type: Steinadler.Dist.Protocol.PID)
-  field(:result, 2, type: Steinadler.Dist.Protocol.Result, enum: true)
+  field :source, 1, type: Steinadler.Dist.Protocol.PID
+  field :result, 2, type: Steinadler.Dist.Protocol.Result, enum: true
 end
 
 defmodule Steinadler.Dist.Protocol.Data do
@@ -204,11 +204,11 @@ defmodule Steinadler.Dist.Protocol.Data do
     )
   end
 
-  oneof(:action, 0)
-  field(:register, 1, type: Steinadler.Dist.Protocol.Register, oneof: 0)
-  field(:unregister, 2, type: Steinadler.Dist.Protocol.Register, oneof: 0)
-  field(:request, 3, type: Steinadler.Dist.Protocol.ProcessRequest, oneof: 0)
-  field(:response, 4, type: Steinadler.Dist.Protocol.ProcessResponse, oneof: 0)
+  oneof :action, 0
+  field :register, 1, type: Steinadler.Dist.Protocol.Register, oneof: 0
+  field :unregister, 2, type: Steinadler.Dist.Protocol.Register, oneof: 0
+  field :request, 3, type: Steinadler.Dist.Protocol.ProcessRequest, oneof: 0
+  field :response, 4, type: Steinadler.Dist.Protocol.ProcessResponse, oneof: 0
 end
 
 defmodule Steinadler.Dist.Protocol.DistributionProtocol.Service do
@@ -223,11 +223,11 @@ defmodule Steinadler.Dist.Protocol.DistributionProtocol.Service do
         110, 97, 100, 108, 101, 114, 46, 100, 105, 115, 116, 46, 112, 114, 111, 116, 111, 99, 111,
         108, 46, 68, 97, 116, 97, 26, 30, 46, 115, 116, 101, 105, 110, 97, 100, 108, 101, 114, 46,
         100, 105, 115, 116, 46, 112, 114, 111, 116, 111, 99, 111, 108, 46, 68, 97, 116, 97, 34, 3,
-        136, 2, 0, 40, 1, 48, 0>>
+        136, 2, 0, 40, 1, 48, 1>>
     )
   end
 
-  rpc(:Handle, stream(Steinadler.Dist.Protocol.Data), Steinadler.Dist.Protocol.Data)
+  rpc :Handle, stream(Steinadler.Dist.Protocol.Data), stream(Steinadler.Dist.Protocol.Data)
 end
 
 defmodule Steinadler.Dist.Protocol.DistributionProtocol.Stub do
