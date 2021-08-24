@@ -1,11 +1,11 @@
 defmodule Steinadler.StreamRef do
   @moduledoc """
+
   `StreamRefs` allow streams to run on multiple nodes within a cluster.
 
   StreamRefs are references to existing parts of a stream and can be used to create a distributed processing framework.
 
   When to use:
-
   * In systems that expect long-running streams of data between two entities.
   * Point-to-Point streaming without the need to set up additional message brokers.
   * In which you need to send messages between nodes in a flow-controlled fashion.
@@ -15,16 +15,16 @@ defmodule Steinadler.StreamRef do
   Sink: Designates a stream producer. This in turn forwards the created stream
         to be processed on another node by a consumer aka Source.
 
-  Source: Designates a consumer stream, most likely the initial stream was created on another node in the cluster
+        Source: Designates a consumer stream, most likely the initial stream was created on another node in the cluster
           and sent remotely to be consumed on the node that implements part of the stream's processing.
 
   Examples:
 
   Define a Sink.
+
   ```elixir
   defmodule SinkStreamRef do
     use Steinadler.StreamRef, as: :sink, name: __MODULE__
-
     def sink(_opts) do
       node = :"node1@127.0.0.1"
       flow = Flow.from_enumerable([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
@@ -38,13 +38,12 @@ defmodule Steinadler.StreamRef do
   ```elixir
   defmodule SourceStreamRef do
     use Steinadler.StreamRef, as: :source, refname: "multiplier"
-
     def source(flow, _opts) do
       process_flow = Flow.map(flow, fn elem -> elem * 2 end) |> Flow.each(fn item -> IO.inspect(item) end)
       {:ok, process_flow}
     end
   end
-  ``
+  ```
 
   Registering flows:
 
@@ -58,7 +57,6 @@ defmodule Steinadler.StreamRef do
 
   ```elixir
   SourceStreamRef.start_link([refname: "multiplier", as: :source])
-
   # Generate
   [2, 4, 6, 8, 10, ...]
   ```

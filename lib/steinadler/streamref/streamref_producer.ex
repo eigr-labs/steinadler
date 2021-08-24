@@ -27,13 +27,13 @@ defmodule Steinadler.StreamRef.Producer do
   @impl true
   def handle_cast({:add, events}, %{buffer: buffer} = state) when is_list(events) do
     buf = Qex.join(buffer, Qex.new(events))
-    {:noreply, Enum.to_list(buf), %{state | buffer: buf}}
+    {:noreply, Enum.to_list(buf), state}
   end
 
   def handle_cast({:add, events}, %{buffer: buffer} = state) do
     new_state = Qex.push(buffer, events)
 
-    {:noreply, Enum.to_list(new_state), %{state | buffer: new_state}}
+    {:noreply, Enum.to_list(new_state), state}
   end
 
   def start_link(%{refname: name} = state) do
