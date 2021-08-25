@@ -17,6 +17,7 @@
                         'Elixir.Steinadler.Dist.Protocol.RouterServer',
                         'Elixir.Steinadler.Dist.Protocol.StreamServer',
                         'Elixir.Steinadler.Dist.Protocol.StreamSupervisor',
+                        'Elixir.Steinadler.Dist.Protocol.Token',
                         'Elixir.Steinadler.Dist.Protocol_dist',
                         'Elixir.Steinadler.LocalNode',
                         'Elixir.Steinadler.Native']},
