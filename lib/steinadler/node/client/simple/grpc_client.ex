@@ -3,6 +3,7 @@ defmodule Steinadler.Node.Client.GrpcClient do
   use GenServer
   require Logger
 
+  alias Steinadler.Dist.Protocol.Token
   alias Steinadler.Dist.Protocol.DistributionProtocol.Stub, as: DistributionService
 
   @impl true
@@ -12,21 +13,21 @@ defmodule Steinadler.Node.Client.GrpcClient do
 
   @impl true
   def handle_call({:connect, address}, _from, %{clients: clients} = state) do
+    token = Token.create(%{"sub" => address})
+
     case GRPC.Stub.connect(address,
-           interceptors: [GRPC.Logger.Client],
+           headers: [{"authorization", token}],
            adapter_opts: %{http2_opts: %{keepalive: 10000}}
          ) do
       {:ok, %GRPC.Channel{adapter_payload: %{conn_pid: connection_pid}} = channel} ->
         stream = DistributionService.handle(channel, compressor: GRPC.Compressor.Gzip)
-
         Process.monitor(connection_pid)
-        IO.inspect(channel, label: "Channel ->")
-        IO.inspect(stream, label: "Stream ->")
 
         clients = Map.put(clients, address, {channel, stream})
         state = %{state | clients: clients}
 
         spawn(fn ->
+          Logger.debug("Steinadler Cluster waiting for events...")
           {:ok, result_stream} = GRPC.Stub.recv(stream, timeout: :infinity)
 
           Stream.each(result_stream, fn elem -> handle_result(elem) end)
@@ -52,7 +53,11 @@ defmodule Steinadler.Node.Client.GrpcClient do
     GenServer.start_link(__MODULE__, state, name: __MODULE__)
   end
 
-  def connect(address), do: GenServer.call(__MODULE__, {:connect, address})
+  def connect(port, address) when (is_atom(address) and not is_nil(address)) or address != "" do
+    [name, fqdn] = String.split(Atom.to_string(address), "@")
+    Logger.debug("Connecting with Node: #{inspect(name)}. On Address: #{inspect(fqdn)}")
+    GenServer.call(__MODULE__, {:connect, "#{fqdn}:#{port}"})
+  end
 
   defp handle_result(elem) do
     Logger.debug("Received message #{inspect(elem)}")

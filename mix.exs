@@ -28,6 +28,8 @@ defmodule Steinadler.MixProject do
       {:google_protos, "~> 0.1.0"},
       {:grpc, "~> 0.5.0-beta.1"},
       {:injectx, "~> 0.1"},
+      {:jason, "~> 1.2"},
+      {:joken, "~> 2.4"},
       {:qex, "~> 0.5"},
       {:libcluster, "~> 3.3"},
       {:poison, "~> 5.0"},

@@ -1,16 +1,16 @@
 defmodule Steinadler.NodeBehaviour do
-  @type addres :: atom()
+  @type address :: atom()
 
   @callback start(any) :: :ok | {:error, any()}
 
   @callback list() :: [atom()]
 
-  @callback connect(addres()) :: boolean()
+  @callback connect(integer(), address()) :: boolean()
 
-  @callback disconnect(atom()) :: boolean()
+  @callback disconnect(integer(), address()) :: boolean()
 
-  @callback spawn(addres(), module(), atom(), [any()]) :: :ok | {:error, any()}
+  @callback spawn(address(), module(), atom(), [any()]) :: :ok | {:error, any()}
 
-  @callback spawn(addres(), module(), atom(), [any()], Process.spawn_opts()) ::
+  @callback spawn(address(), module(), atom(), [any()], Process.spawn_opts()) ::
               :ok | {:error, any()}
 end

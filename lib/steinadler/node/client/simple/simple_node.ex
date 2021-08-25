@@ -3,11 +3,12 @@ defmodule Steinadler.Node.Client.SimpleNode do
 
   """
   require Logger
+  import Steinadler.Dist.Protocol.TypeConversions
+
+  alias Steinadler.Node.Client.GrpcClient, as: NodeClient
+  alias Steinadler.Dist.Protocol.{PID, ProcessRequest}
 
   @behaviour Steinadler.NodeBehaviour
-
-  import Steinadler.Dist.Protocol.TypeConversions
-  alias Steinadler.Dist.Protocol.{PID, ProcessRequest}
 
   @impl true
   @spec start(any) :: :ok
@@ -24,16 +25,18 @@ defmodule Steinadler.Node.Client.SimpleNode do
   end
 
   @impl true
-  @spec connect(atom()) :: boolean()
-  def connect(address) do
+  @spec connect(integer(), atom()) :: true
+  def connect(port, address) do
     child = {Steinadler.Node.Client.GrpcClient, %{clients: %{}}}
 
     case DynamicSupervisor.start_child(Steinadler.DynamicSupervisor, child) do
       {:ok, _pid} ->
-        [name, fqdn] = String.split(Atom.to_string(address), "@")
-        Logger.debug("Connecting with Node: #{inspect(name)}. On Address: #{inspect(fqdn)}")
+        with {:ok, _clients} <- NodeClient.connect(port, address) do
+          # NodeClient.send()
+        else
+          error -> IO.inspect(error, label: "------->")
+        end
 
-      # spawn_link(fn -> Native.register(name, fqdn, 4000) end)
       _ ->
         nil
     end
@@ -42,8 +45,8 @@ defmodule Steinadler.Node.Client.SimpleNode do
   end
 
   @impl true
-  @spec disconnect(atom()) :: boolean()
-  def disconnect(address) do
+  @spec disconnect(integer(), atom()) :: boolean()
+  def disconnect(_port, address) do
     [name, fqdn] = String.split(Atom.to_string(address), "@")
     Logger.debug("Disconnecting from Node: #{inspect(name)}. On Address: #{inspect(fqdn)}")
     # Native.unregister(name)

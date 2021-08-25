@@ -8,11 +8,11 @@ defmodule Steinadler.Dist.Protocol.StreamSupervisor do
   @impl true
   def init(_opts), do: DynamicSupervisor.init(strategy: :one_for_one)
 
-  @spec add_stream_to_supervisor(GRPC.Server.Stream.t()) :: {:ok, pid()}
-  def add_stream_to_supervisor(stream) do
+  @spec add_stream_to_supervisor(map()) :: {:ok, pid()}
+  def add_stream_to_supervisor(args) do
     child_spec = %{
       id: Steinadler.Dist.Protocol.StreamServer,
-      start: {Steinadler.Dist.Protocol.StreamServer, :start_link, [stream]},
+      start: {Steinadler.Dist.Protocol.StreamServer, :start_link, [args]},
       restart: :transient
     }
 
