@@ -6,7 +6,7 @@ defmodule Steinadler.Node.Client.SimpleNode do
   import Steinadler.Dist.Protocol.TypeConversions
 
   alias Steinadler.Node.Client.GrpcClient, as: NodeClient
-  alias Steinadler.Dist.Protocol.{PID, ProcessRequest}
+  alias Steinadler.Dist.Protocol.{Data, Node, PID, ProcessRequest, Register}
 
   @behaviour Steinadler.NodeBehaviour
 
@@ -21,7 +21,17 @@ defmodule Steinadler.Node.Client.SimpleNode do
   @spec list :: [atom()]
   def list() do
     :ets.tab2list(:nodes)
-    |> Enum.map(fn {address, _node} -> String.to_existing_atom(address) end)
+    |> Enum.map(fn {_address, node} -> String.to_existing_atom(node.address) end)
+  end
+
+  @impl true
+  @spec list(any()) :: [atom()]
+  def list(opts) when opts == :visible do
+    others =
+      :ets.tab2list(:nodes)
+      |> Enum.map(fn {_address, node} -> String.to_existing_atom(node.address) end)
+
+    [node()] ++ others
   end
 
   @impl true
@@ -32,9 +42,17 @@ defmodule Steinadler.Node.Client.SimpleNode do
     case DynamicSupervisor.start_child(Steinadler.DynamicSupervisor, child) do
       {:ok, _pid} ->
         with {:ok, _clients} <- NodeClient.connect(port, address) do
-          # NodeClient.send()
+          [name, _fqdn] = String.split(Atom.to_string(address), "@")
+          node = Node.new(name: name, address: Atom.to_string(address), port: port)
+          data = Data.new(action: {:register, Register.new(node: node)})
+          NodeClient.send(address, data)
         else
-          error -> IO.inspect(error, label: "------->")
+          error ->
+            Logger.error(
+              "Error during connection process with address #{inspect(address)}. Details: #{
+                inspect(error)
+              }"
+            )
         end
 
       _ ->

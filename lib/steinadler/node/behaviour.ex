@@ -5,6 +5,8 @@ defmodule Steinadler.NodeBehaviour do
 
   @callback list() :: [atom()]
 
+  @callback list(any()) :: [atom()]
+
   @callback connect(integer(), address()) :: boolean()
 
   @callback disconnect(integer(), address()) :: boolean()

@@ -99,10 +99,10 @@ defmodule Steinadler do
         connect: {Steinadler.Node, :connect, [port]},
         # The function to use for disconnecting nodes. The node
         # name will be appended to the argument list. Optional
-        disconnect: {Steinadler.Node, :disconnect, [Keyword.get(args, :default_port, 4_000)]},
+        disconnect: {Steinadler.Node, :disconnect, [port]},
         # The function to use for listing nodes.
         # This function must return a list of node names. Optional
-        list_nodes: {Steinadler.Node, :list, []}
+        list_nodes: {Steinadler.Node, :list, [:visible]}
       ]
     ]
   end
@@ -124,7 +124,7 @@ defmodule Steinadler do
         disconnect: {Steinadler.Node, :disconnect, [port]},
         # The function to use for listing nodes.
         # This function must return a list of node names. Optional
-        list_nodes: {Steinadler.Node, :list, []},
+        list_nodes: {Steinadler.Node, :list, [:visible]},
         config: [
           service: service,
           application_name: application_name,

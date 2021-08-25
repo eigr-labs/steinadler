@@ -3,7 +3,7 @@ defmodule Steinadler.Node.Client.GrpcClient do
   use GenServer
   require Logger
 
-  alias Steinadler.Dist.Protocol.Token
+  alias Steinadler.Dist.Protocol.{Data, Register, Token}
   alias Steinadler.Dist.Protocol.DistributionProtocol.Stub, as: DistributionService
 
   @impl true
@@ -43,8 +43,14 @@ defmodule Steinadler.Node.Client.GrpcClient do
   end
 
   @impl true
-  def handle_call({:send, address, data}, _from, %{clients: clients} = state) do
-    {_channel, stream} = Map.get(clients, address)
+  def handle_call(
+        {:send, address, %Data{action: {:register, %Register{node: node}}} = data},
+        _from,
+        %{clients: clients} = state
+      ) do
+    [_name, fqdn] = String.split(Atom.to_string(address), "@")
+
+    {_channel, stream} = Map.get(clients, "#{fqdn}:#{node.port}")
     GRPC.Stub.send_request(stream, data)
     {:reply, [], state}
   end
@@ -58,6 +64,8 @@ defmodule Steinadler.Node.Client.GrpcClient do
     Logger.debug("Connecting with Node: #{inspect(name)}. On Address: #{inspect(fqdn)}")
     GenServer.call(__MODULE__, {:connect, "#{fqdn}:#{port}"})
   end
+
+  def send(address, data), do: GenServer.call(__MODULE__, {:send, address, data})
 
   defp handle_result(elem) do
     Logger.debug("Received message #{inspect(elem)}")
