@@ -3,7 +3,7 @@ defmodule Steinadler.Node.Client.GrpcClient do
   use GenServer
   require Logger
 
-  alias Steinadler.Dist.Protocol.{Data, Register, Token}
+  alias Steinadler.Dist.Protocol.{Data, ProcessRequest, Register, Token}
   alias Steinadler.Dist.Protocol.DistributionProtocol.Stub, as: DistributionService
 
   @impl true
@@ -44,13 +44,31 @@ defmodule Steinadler.Node.Client.GrpcClient do
 
   @impl true
   def handle_call(
-        {:send, address, %Data{action: {:register, %Register{node: node}}} = data},
+        {:send, address, port, data},
         _from,
         %{clients: clients} = state
       ) do
     [_name, fqdn] = String.split(Atom.to_string(address), "@")
 
-    {_channel, stream} = Map.get(clients, "#{fqdn}:#{node.port}")
+    remote = "#{fqdn}:#{port}"
+    IO.inspect(remote, label: "Vaiiiiii")
+
+    {_channel, stream} = Map.get(clients, remote)
+
+    GRPC.Stub.send_request(stream, data)
+    {:reply, [], state}
+  end
+
+  @impl true
+  def handle_call(
+        {:send, address, port, %Data{action: {:request, %ProcessRequest{}}} = data},
+        _from,
+        %{clients: clients} = state
+      ) do
+    [_name, fqdn] = String.split(Atom.to_string(address), "@")
+
+    remote = "#{fqdn}:#{port}"
+    {_channel, stream} = Map.get(clients, remote)
     GRPC.Stub.send_request(stream, data)
     {:reply, [], state}
   end
@@ -61,11 +79,11 @@ defmodule Steinadler.Node.Client.GrpcClient do
 
   def connect(port, address) when (is_atom(address) and not is_nil(address)) or address != "" do
     [name, fqdn] = String.split(Atom.to_string(address), "@")
-    Logger.debug("Connecting with Node: #{inspect(name)}. On Address: #{inspect(fqdn)}")
+    Logger.debug("Connecting with Node: #{inspect(name)}. On Address: #{inspect(fqdn)}:#{port}")
     GenServer.call(__MODULE__, {:connect, "#{fqdn}:#{port}"})
   end
 
-  def send(address, data), do: GenServer.call(__MODULE__, {:send, address, data})
+  def send(address, port, data), do: GenServer.call(__MODULE__, {:send, address, port, data})
 
   defp handle_result(elem) do
     Logger.debug("Received message #{inspect(elem)}")

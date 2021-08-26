@@ -35,17 +35,24 @@ defmodule Steinadler.Node.Client.SimpleNode do
   end
 
   @impl true
-  @spec connect(integer(), atom()) :: true
-  def connect(port, address) do
+  @spec connect(atom()) :: true
+  def connect(address) do
+    local_address = node()
+    local_port = resolve_port(local_address)
+    remote_port = resolve_port(address)
+
     child = {Steinadler.Node.Client.GrpcClient, %{clients: %{}}}
 
     case DynamicSupervisor.start_child(Steinadler.DynamicSupervisor, child) do
       {:ok, _pid} ->
-        with {:ok, _clients} <- NodeClient.connect(port, address) do
-          [name, _fqdn] = String.split(Atom.to_string(address), "@")
-          node = Node.new(name: name, address: Atom.to_string(address), port: port)
+        with {:ok, _clients} <- NodeClient.connect(remote_port, address) do
+          [name, _fqdn] = String.split(Atom.to_string(local_address), "@")
+
+          IO.inspect(remote_port, label: "A porra da Porta ->")
+          node = Node.new(name: name, address: Atom.to_string(local_address), port: local_port)
+          IO.inspect(node, label: "O lixo do Node ->")
           data = Data.new(action: {:register, Register.new(node: node)})
-          NodeClient.send(address, data)
+          NodeClient.send(address, remote_port, data)
         else
           error ->
             Logger.error(
@@ -63,18 +70,29 @@ defmodule Steinadler.Node.Client.SimpleNode do
   end
 
   @impl true
-  @spec disconnect(integer(), atom()) :: boolean()
-  def disconnect(_port, address) do
+  @spec disconnect(atom()) :: boolean()
+  def disconnect(address) do
+    _port = resolve_port(address)
     [name, fqdn] = String.split(Atom.to_string(address), "@")
+
     Logger.debug("Disconnecting from Node: #{inspect(name)}. On Address: #{inspect(fqdn)}")
-    # Native.unregister(name)
     true
   end
 
   @impl true
+  @spec resolve_port(atom()) :: integer()
+  def resolve_port(address) do
+    [name, _fqdn] = String.split(Atom.to_string(address), "@")
+    dist_port(name)
+  end
+
+  @impl true
   @spec spawn(atom(), module(), atom(), [any()]) :: :ok
-  def spawn(_address, mod, fun, args) do
-    _req = get_request(mod, fun, args)
+  def spawn(address, mod, fun, args) do
+    port = resolve_port(address)
+    req = get_request(mod, fun, args)
+    data = Data.new(action: {:request, req})
+    NodeClient.send(address, port, data)
   end
 
   @impl true
@@ -101,5 +119,27 @@ defmodule Steinadler.Node.Client.SimpleNode do
       args: arguments,
       request_hash: hash
     )
+  end
+
+  def dist_port(name) when is_binary(name) do
+    base_port = Application.get_env(:steinadler, :grpc_port, 4_000)
+
+    # Now, figure out our "offset" on top of the base port.  The
+    # offset is the integer just to the left of the @ sign in our node
+    # name.  If there is no such number, the offset is 0.
+    #
+    # Also handle the case when no hostname was specified.
+    node_name = Regex.replace(~r/@.*$/, name, "")
+
+    offset =
+      case Regex.run(~r/[0-9]+$/, node_name) do
+        nil ->
+          0
+
+        [offset_as_string] ->
+          String.to_integer(offset_as_string)
+      end
+
+    base_port + offset
   end
 end

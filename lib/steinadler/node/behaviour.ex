@@ -7,9 +7,11 @@ defmodule Steinadler.NodeBehaviour do
 
   @callback list(any()) :: [atom()]
 
-  @callback connect(integer(), address()) :: boolean()
+  @callback connect(address()) :: boolean()
 
-  @callback disconnect(integer(), address()) :: boolean()
+  @callback disconnect(address()) :: boolean()
+
+  @callback resolve_port(atom()) :: integer()
 
   @callback spawn(address(), module(), atom(), [any()]) :: :ok | {:error, any()}
 

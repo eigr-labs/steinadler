@@ -42,7 +42,7 @@ defmodule Steinadler do
       {DynamicSupervisor, strategy: :one_for_one, name: Steinadler.DynamicSupervisor},
       {Steinadler.Process.Supervisor, []},
       {Steinadler.Dist.Protocol.StreamSupervisor, []},
-      {GRPC.Server.Supervisor, get_grpc_options(port)},
+      {GRPC.Server.Supervisor, get_grpc_options(Steinadler.Node.resolve_port(local_node))},
       cluster_supervisor(args)
     ]
 
@@ -88,28 +88,24 @@ defmodule Steinadler do
     end
   end
 
-  defp get_gossip_strategy(args) do
-    port = Keyword.get(args, :default_port, 4_000)
-
-    [
+  defp get_gossip_strategy(_args),
+    do: [
       steinadler: [
         strategy: Cluster.Strategy.Gossip,
         # The function to use for connecting nodes. The node
         # name will be appended to the argument list. Optional
-        connect: {Steinadler.Node, :connect, [port]},
+        connect: {Steinadler.Node, :connect, []},
         # The function to use for disconnecting nodes. The node
         # name will be appended to the argument list. Optional
-        disconnect: {Steinadler.Node, :disconnect, [port]},
+        disconnect: {Steinadler.Node, :disconnect, []},
         # The function to use for listing nodes.
         # This function must return a list of node names. Optional
         list_nodes: {Steinadler.Node, :list, [:visible]}
       ]
     ]
-  end
 
   defp get_k8s_strategy(args) do
     service = Keyword.get(args, :service)
-    port = Keyword.get(args, :default_port, 4_000)
     application_name = Keyword.get(args, :application_name)
     polling_interval = Keyword.get(args, :polling_interval, 3_000)
 
@@ -118,10 +114,10 @@ defmodule Steinadler do
         strategy: Elixir.Cluster.Strategy.Kubernetes.DNS,
         # The function to use for connecting nodes. The node
         # name will be appended to the argument list. Optional
-        connect: {Steinadler.Node, :connect, [port]},
+        connect: {Steinadler.Node, :connect, []},
         # The function to use for disconnecting nodes. The node
         # name will be appended to the argument list. Optional
-        disconnect: {Steinadler.Node, :disconnect, [port]},
+        disconnect: {Steinadler.Node, :disconnect, []},
         # The function to use for listing nodes.
         # This function must return a list of node names. Optional
         list_nodes: {Steinadler.Node, :list, [:visible]},
