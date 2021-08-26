@@ -29,6 +29,7 @@ defmodule Steinadler.Node.Client.GrpcClient do
         spawn(fn ->
           Logger.debug("Steinadler Cluster waiting for events...")
           {:ok, result_stream} = GRPC.Stub.recv(stream, timeout: :infinity)
+          IO.inspect(result_stream, label: "Response Stream")
 
           Stream.each(result_stream, fn elem -> handle_result(elem) end)
           |> Stream.run()
@@ -48,7 +49,12 @@ defmodule Steinadler.Node.Client.GrpcClient do
         _from,
         %{clients: clients} = state
       ) do
-    [_name, fqdn] = String.split(Atom.to_string(address), "@")
+    [_name, fqdn] =
+      if is_atom(address) do
+        String.split(Atom.to_string(address), "@")
+      else
+        String.split(address, "@")
+      end
 
     remote = "#{fqdn}:#{port}"
 
@@ -64,11 +70,18 @@ defmodule Steinadler.Node.Client.GrpcClient do
         _from,
         %{clients: clients} = state
       ) do
-    [_name, fqdn] = String.split(Atom.to_string(address), "@")
+    [_name, fqdn] =
+      if is_atom(address) do
+        String.split(Atom.to_string(address), "@")
+      else
+        String.split(address, "@")
+      end
 
     remote = "#{fqdn}:#{port}"
     {_channel, stream} = Map.get(clients, remote)
+
     GRPC.Stub.send_request(stream, data)
+
     {:reply, [], state}
   end
 
@@ -76,8 +89,14 @@ defmodule Steinadler.Node.Client.GrpcClient do
     GenServer.start_link(__MODULE__, state, name: __MODULE__)
   end
 
-  def connect(port, address) when (is_atom(address) and not is_nil(address)) or address != "" do
+  def connect(port, address) when is_atom(address) and not is_nil(address) do
     [name, fqdn] = String.split(Atom.to_string(address), "@")
+    Logger.debug("Connecting with Node: #{inspect(name)}. On Address: #{inspect(fqdn)}:#{port}")
+    GenServer.call(__MODULE__, {:connect, "#{fqdn}:#{port}"})
+  end
+
+  def connect(port, address) when is_binary(address) and not is_nil(address) do
+    [name, fqdn] = String.split(address, "@")
     Logger.debug("Connecting with Node: #{inspect(name)}. On Address: #{inspect(fqdn)}:#{port}")
     GenServer.call(__MODULE__, {:connect, "#{fqdn}:#{port}"})
   end
@@ -85,6 +104,6 @@ defmodule Steinadler.Node.Client.GrpcClient do
   def send(address, port, data), do: GenServer.call(__MODULE__, {:send, address, port, data})
 
   defp handle_result(elem) do
-    Logger.debug("Received message #{inspect(elem)}")
+    Logger.debug("Received message ---------> #{inspect(elem)}")
   end
 end

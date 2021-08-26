@@ -3,7 +3,7 @@ defmodule Steinadler.Node.Client.SimpleNode do
 
   """
   require Logger
-  import Steinadler.Dist.Protocol.TypeConversions
+  import Steinadler.Dist.Protocol.{Util, TypeConversions}
 
   alias Steinadler.Node.Client.GrpcClient, as: NodeClient
   alias Steinadler.Dist.Protocol.{Data, Node, PID, ProcessRequest, Register}
@@ -69,8 +69,14 @@ defmodule Steinadler.Node.Client.SimpleNode do
 
   @impl true
   @spec resolve_port(atom()) :: integer()
-  def resolve_port(address) do
+  def resolve_port(address) when is_atom(address) do
     [name, _fqdn] = String.split(Atom.to_string(address), "@")
+    dist_port(name)
+  end
+
+  @impl true
+  def resolve_port(address) when is_binary(address) do
+    [name, _fqdn] = String.split(address, "@")
     dist_port(name)
   end
 
@@ -128,27 +134,5 @@ defmodule Steinadler.Node.Client.SimpleNode do
       args: arguments,
       request_hash: hash
     )
-  end
-
-  def dist_port(name) when is_binary(name) do
-    base_port = Application.get_env(:steinadler, :grpc_port, 4_000)
-
-    # Now, figure out our "offset" on top of the base port.  The
-    # offset is the integer just to the left of the @ sign in our node
-    # name.  If there is no such number, the offset is 0.
-    #
-    # Also handle the case when no hostname was specified.
-    node_name = Regex.replace(~r/@.*$/, name, "")
-
-    offset =
-      case Regex.run(~r/[0-9]+$/, node_name) do
-        nil ->
-          0
-
-        [offset_as_string] ->
-          String.to_integer(offset_as_string)
-      end
-
-    base_port + offset
   end
 end

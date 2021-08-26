@@ -100,7 +100,7 @@ defmodule Steinadler do
         disconnect: {Steinadler.Node, :disconnect, []},
         # The function to use for listing nodes.
         # This function must return a list of node names. Optional
-        list_nodes: {Steinadler.Node, :list, [:visible]}
+        list_nodes: {Steinadler.Node, :list, []}
       ]
     ]
 
@@ -120,7 +120,7 @@ defmodule Steinadler do
         disconnect: {Steinadler.Node, :disconnect, []},
         # The function to use for listing nodes.
         # This function must return a list of node names. Optional
-        list_nodes: {Steinadler.Node, :list, [:visible]},
+        list_nodes: {Steinadler.Node, :list, []},
         config: [
           service: service,
           application_name: application_name,

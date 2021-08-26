@@ -20,6 +20,7 @@
                         'Elixir.Steinadler.Dist.Protocol.StreamSupervisor',
                         'Elixir.Steinadler.Dist.Protocol.Token',
                         'Elixir.Steinadler.Dist.Protocol.TypeConversions',
+                        'Elixir.Steinadler.Dist.Protocol.Util',
                         'Elixir.Steinadler.Node',
                         'Elixir.Steinadler.Node.Client.GrpcClient',
                         'Elixir.Steinadler.Node.Client.Native',

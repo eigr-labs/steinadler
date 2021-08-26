@@ -3,14 +3,18 @@ defmodule Steinadler.Dist.Protocol.StreamServer do
 
   """
   use GenServer
+  use Injectx
+
   require Logger
+
+  inject(Steinadler.NodeBehaviour)
 
   alias Steinadler.Dist.Protocol.{Node, ProcessRequest}
 
   # Server API
 
   @impl true
-  def init(%{address: address, stream: %{payload: %{pid: stream_pid} = stream}} = _args) do
+  def init(%{address: address, stream: %{payload: %{pid: stream_pid}} = stream} = _args) do
     Process.monitor(stream_pid)
     Process.flag(:trap_exit, true)
 
@@ -45,9 +49,20 @@ defmodule Steinadler.Dist.Protocol.StreamServer do
   end
 
   @impl true
-  def handle_call({:register, %Node{} = node, _stream}, _from, state) do
+  def handle_call({:register, %Node{} = node, _stream}, _from, %{stream: _channel_stream} = state) do
     Logger.debug("Registering node: #{inspect(node)}")
-    :ets.insert(:nodes, {node.address, node})
+
+    key = node.address
+
+    case :ets.lookup(:nodes, key) do
+      [{^key, _node}] ->
+        Logger.warn("Node already registered")
+
+      [] ->
+        with _inserted <- :ets.insert(:nodes, {node.address, node}),
+             do: NodeBehaviour.connect(node.address)
+    end
+
     {:reply, :ok, state, :hibernate}
   end
 
