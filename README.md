@@ -19,7 +19,7 @@ We also do this with a network topology that is easily bridged via NAT technolog
 ```sh
 $ iex --name node1@ip -S mix
 
-iex(1)> Steinadler.start_link([cluster_strategy: :gossip, default_port: 4001])
+iex(1)> Steinadler.start_link([cluster_strategy: :gossip])
 
 10:29:38.250 [debug] Starting node :"node@ip
 ```
@@ -29,7 +29,7 @@ In another terminal try:
 ```sh
 $ iex --name node2@ip -S mix
 
-iex(1)> Steinadler.start_link([cluster_strategy: :gossip, default_port: 4002])
+iex(1)> Steinadler.start_link([cluster_strategy: :gossip])
 
 10:29:38.250 [debug] Starting node :"node2@ip
 
@@ -57,7 +57,7 @@ iex(node1@127.0.0.1)5> spawn(:all, Test, :hello, ["world"]) end)
 
 * Node discovery. ✓
 * Tls support. ✓
-* Cookie support. 
+* Cookie support. ✓
 * Execute functions in one, all or some nodes. ✓
 * Send messages to named process.
 * Backpressure.
@@ -68,7 +68,8 @@ iex(node1@127.0.0.1)5> spawn(:all, Test, :hello, ["world"]) end)
 
 - [x] Node discovery
 - [x] gRPC Server
-- [ ] gRPC Client
+- [x] gRPC Client (Elixir)
+- [ ] gRPC Client (Rust)
 - [x] Execution of Functions on Remote Node
 - [x] Caching of function arguments
 - [ ] Node labels.
