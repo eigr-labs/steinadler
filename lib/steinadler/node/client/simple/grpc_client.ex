@@ -44,14 +44,13 @@ defmodule Steinadler.Node.Client.GrpcClient do
 
   @impl true
   def handle_call(
-        {:send, address, port, data},
+        {:send, address, port, %Data{action: {:register, %Register{}}} = data},
         _from,
         %{clients: clients} = state
       ) do
     [_name, fqdn] = String.split(Atom.to_string(address), "@")
 
     remote = "#{fqdn}:#{port}"
-    IO.inspect(remote, label: "Vaiiiiii")
 
     {_channel, stream} = Map.get(clients, remote)
 

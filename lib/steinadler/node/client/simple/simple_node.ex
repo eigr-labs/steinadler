@@ -37,33 +37,21 @@ defmodule Steinadler.Node.Client.SimpleNode do
   @impl true
   @spec connect(atom()) :: true
   def connect(address) do
-    local_address = node()
-    local_port = resolve_port(local_address)
-    remote_port = resolve_port(address)
-
     child = {Steinadler.Node.Client.GrpcClient, %{clients: %{}}}
 
     case DynamicSupervisor.start_child(Steinadler.DynamicSupervisor, child) do
       {:ok, _pid} ->
-        with {:ok, _clients} <- NodeClient.connect(remote_port, address) do
-          [name, _fqdn] = String.split(Atom.to_string(local_address), "@")
+        try_connect(address)
 
-          IO.inspect(remote_port, label: "A porra da Porta ->")
-          node = Node.new(name: name, address: Atom.to_string(local_address), port: local_port)
-          IO.inspect(node, label: "O lixo do Node ->")
-          data = Data.new(action: {:register, Register.new(node: node)})
-          NodeClient.send(address, remote_port, data)
-        else
-          error ->
-            Logger.error(
-              "Error during connection process with address #{inspect(address)}. Details: #{
-                inspect(error)
-              }"
-            )
-        end
+      {:error, {:already_started, _pid}} ->
+        try_connect(address)
 
-      _ ->
-        nil
+      error ->
+        Logger.error(
+          "Error during connection process with address #{inspect(address)}. Details: #{
+            inspect(error)
+          }"
+        )
     end
 
     true
@@ -99,6 +87,27 @@ defmodule Steinadler.Node.Client.SimpleNode do
   @spec spawn(atom(), module(), atom(), [any()], Process.spawn_opts()) :: :ok
   def spawn(_address, _mod, _fun, _args, _opts) do
     :ok
+  end
+
+  defp try_connect(address) do
+    local_address = node()
+    local_port = resolve_port(local_address)
+    remote_port = resolve_port(address)
+
+    with {:ok, _clients} <- NodeClient.connect(remote_port, address) do
+      [name, _fqdn] = String.split(Atom.to_string(local_address), "@")
+
+      node = Node.new(name: name, address: Atom.to_string(local_address), port: local_port)
+      data = Data.new(action: {:register, Register.new(node: node)})
+      NodeClient.send(address, remote_port, data)
+    else
+      error ->
+        Logger.error(
+          "Error during connection process with address #{inspect(address)}. Details: #{
+            inspect(error)
+          }"
+        )
+    end
   end
 
   defp get_request(mod, fun, args) do
