@@ -19,26 +19,14 @@ name = "steinadler"
 path = "src/lib.rs"
 crate-type = ["cdylib"]
 
-# Compile protos
-build = "build.rs"
-
 [dependencies]
 rustler = "0.22.0"
-tonic = "0.5"
-prost = "0.8"
-prost-types  = "0.8"
-tokio = { version = "1.0", features = ["rt-multi-thread", "time", "fs", "macros", "net"] }
-tokio-stream = { version =  "0.1", features = ["net"] }
-async-stream = "0.3"
-futures      = { version = "0.3", default-features = false, features = ["alloc"] }
-tower        = { version = "0.4" }
-tracing = "0.1"
-tracing-subscriber = { version = "0.2.7", default-features = false, features = ["fmt", "ansi", "env-filter", "chrono", "tracing-log"] }
+rsocket_rust = "0.7.1"
+rsocket_rust_transport_tcp = "0.7.1"
+tokio = "1.0.3"
+tokio = { version = "1.0.3", features = ["rt-multi-thread", "time", "fs", "macros", "net"] }
 bytes        = "1"
 rustc_version = "0.4.0"
 log           = "0.4.14"
 log4rs        = "1.0.0"
 
-[build-dependencies]
-tonic-build = { version = "0.5", features = ["prost", "compression"] } 
-protoc-rust = "2.24.1"

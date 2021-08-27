@@ -2,6 +2,10 @@ use std::error::Error;
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use tokio::net::{TcpListener, TcpStream};
 
+use rsocket_rust::async_trait;
+use rsocket_rust::prelude::*;
+use rsocket_rust::Result;
+
 use std::str;
 
 #[derive(Debug, Clone)]
@@ -10,6 +14,9 @@ pub struct Server {
     pub port: i64,
     pub name: String,
 }
+
+#[async_trait]
+impl RSocket for Server {}
 
 impl Default for Server {
     fn default() -> Server {
