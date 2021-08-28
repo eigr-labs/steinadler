@@ -1,7 +1,9 @@
 use rsocket_rust::Client;
 use std::collections::HashMap;
+use std::sync::Mutex;
 
 use futures::StreamExt;
+use lazy_static::lazy_static;
 use rsocket_rust::async_trait;
 use rsocket_rust::prelude::*;
 use rsocket_rust::runtime;
@@ -13,6 +15,10 @@ use tokio::sync::mpsc;
 use log::{error, info};
 
 pub struct Handle;
+
+lazy_static! {
+    static ref CLIENTS: Mutex<HashMap<String, Client>> = Mutex::new(HashMap::new());
+}
 
 #[async_trait]
 impl RSocket for Handle {
@@ -54,7 +60,6 @@ pub struct Node {
     pub address: String,
     pub port: i64,
     pub name: String,
-    pub clients: HashMap<String, Client>,
 }
 
 impl Default for Node {
@@ -63,7 +68,6 @@ impl Default for Node {
             address: String::from("0.0.0.0"),
             port: 4096,
             name: String::from("app"),
-            clients: HashMap::new(),
         }
     }
 }
@@ -109,35 +113,64 @@ impl Node {
         Ok(())
     }
 
-    #[tokio::main]
-    pub async fn connect(&mut self) -> Result<()> {
-        //&self.clients.contains_key(k: &name)
-        let addr = format!("{}:{}", &self.address, &self.port);
-
-        let mtu: usize = 0;
-        let transport = TcpClientTransport::from(addr);
-
-        let cli = RSocketFactory::connect()
-            .fragment(mtu)
-            .transport(transport)
-            .start()
-            .await?;
-
+    pub fn send_message(&mut self, data: &str) -> Flux<Result<Payload>> {
         let mut bu = Payload::builder();
-        bu = bu.set_data_utf8("Teste!");
+        bu = bu.set_data_utf8(data);
         let req = bu.build();
 
-        let mut results = cli.request_channel(Box::pin(futures::stream::iter(vec![Ok(req)])));
-        loop {
-            match results.next().await {
-                Some(Ok(v)) => info!("{:?}", v),
-                Some(Err(e)) => {
-                    error!("CHANNEL_RESPONSE FAILED: {:?}", e);
-                    break;
+        let results = CLIENTS
+            .lock()
+            .unwrap()
+            .get(&self.address)
+            .unwrap()
+            .request_channel(Box::pin(futures::stream::iter(vec![Ok(req)])));
+        results
+    }
+
+    #[tokio::main]
+    pub async fn connect(&mut self) -> Result<()> {
+        let addr = format!("{}:{}", &self.address, &self.port);
+
+        if CLIENTS.lock().unwrap().contains_key(&self.address) {
+            println!("Found connection in clients map ");
+            let results = &mut self.send_message("Teste!");
+
+            loop {
+                match results.next().await {
+                    Some(Ok(v)) => info!("{:?}", v),
+                    Some(Err(e)) => {
+                        error!("CHANNEL_RESPONSE FAILED: {:?}", e);
+                        break;
+                    }
+                    None => break,
                 }
-                None => break,
             }
-        }
+        } else {
+            println!("Not Found connection in clients map ");
+
+            let mtu: usize = 0;
+            let transport = TcpClientTransport::from(addr);
+
+            let cli = RSocketFactory::connect()
+                .fragment(mtu)
+                .transport(transport)
+                .start()
+                .await?;
+
+            CLIENTS.lock().unwrap().insert(self.address.clone(), cli);
+            let results = &mut self.send_message("Teste!");
+
+            loop {
+                match results.next().await {
+                    Some(Ok(v)) => info!("{:?}", v),
+                    Some(Err(e)) => {
+                        error!("CHANNEL_RESPONSE FAILED: {:?}", e);
+                        break;
+                    }
+                    None => break,
+                }
+            }
+        };
 
         Ok(())
     }

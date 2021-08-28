@@ -1,5 +1,6 @@
 #[macro_use]
 extern crate rustler;
+extern crate lazy_static;
 
 pub mod server;
 

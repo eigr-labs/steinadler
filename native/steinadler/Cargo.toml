@@ -27,6 +27,7 @@ rsocket_rust_transport_tcp = "0.7.1"
 tokio = { version = "1.0.3", features = ["rt-multi-thread", "time", "fs", "macros", "net"] }
 bytes        = "1"
 rustc_version = "0.4.0"
+lazy_static   = "1.4.0"
 log           = "0.4.14"
 env_logger    = "0.8.3"
 log4rs        = "1.0.0"

@@ -713,6 +713,7 @@ dependencies = [
  "bytes",
  "env_logger",
  "futures",
+ "lazy_static",
  "log",
  "log4rs",
  "rsocket_rust",
