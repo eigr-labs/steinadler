@@ -4,9 +4,11 @@ defmodule Steinadler.Node.Client.NativeNode do
   """
   require Logger
 
-  @behaviour Steinadler.NodeBehaviour
+  import Steinadler.Dist.Protocol.Util
 
   alias Steinadler.Node.Client.Native
+
+  @behaviour Steinadler.NodeBehaviour
 
   @impl true
   @spec start(any) :: :ok
@@ -23,11 +25,21 @@ defmodule Steinadler.Node.Client.NativeNode do
   end
 
   @impl true
+  @spec list(any()) :: [atom()]
+  def list(opts) when opts == :visible do
+    others =
+      :ets.tab2list(:nodes)
+      |> Enum.map(fn {_address, node} -> String.to_existing_atom(node.address) end)
+
+    [node()] ++ others
+  end
+
+  @impl true
   @spec connect(atom()) :: boolean()
   def connect(address) do
     [name, fqdn] = String.split(Atom.to_string(address), "@")
     Logger.debug("Connecting with Node: #{inspect(name)}. On Address: #{inspect(fqdn)}")
-    spawn_link(fn -> Native.register(name, fqdn, 4000) end)
+    spawn_link(fn -> Native.bind(name, fqdn, resolve_port(address)) end)
     true
   end
 
@@ -36,13 +48,21 @@ defmodule Steinadler.Node.Client.NativeNode do
   def disconnect(address) do
     [name, fqdn] = String.split(Atom.to_string(address), "@")
     Logger.debug("Disconnecting from Node: #{inspect(name)}. On Address: #{inspect(fqdn)}")
-    Native.unregister(name)
+    Native.unbind(name)
     true
+  end
+
+  @impl true
+  @spec resolve_port(atom()) :: integer()
+  def resolve_port(address) when is_atom(address) do
+    [name, _fqdn] = String.split(Atom.to_string(address), "@")
+    dist_port(name)
   end
 
   @impl true
   @spec spawn(atom(), module(), atom(), [any()]) :: :ok
   def spawn(_address, _mod, _fun, _args) do
+    Native.send("127.0.0.1", 4001, "Teste")
   end
 
   @impl true

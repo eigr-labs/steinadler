@@ -6,7 +6,7 @@ pub mod server;
 use rustler::Atom;
 use std::string::String;
 
-use crate::server::Server;
+use crate::server::Node;
 
 mod atoms {
     atoms! {
@@ -16,24 +16,23 @@ mod atoms {
 }
 
 #[rustler::nif]
-fn register_node(_name: String, _port: i64) {}
+fn send(address: String, port: i64, _data: String) {
+    Node::new().address(address).port(port).connect().unwrap();
+}
 
 #[rustler::nif(schedule = "DirtyCpu")]
-fn register(name: String, address: String, port: i64) {
-    Server::new()
+fn bind(name: String, address: String, port: i64) {
+    Node::new()
         .name(name)
         .address(address)
         .port(port)
-        .connect()
+        .bind()
         .unwrap();
 }
 
 #[rustler::nif]
-fn unregister(_name: String) -> Atom {
+fn unbind(_name: String) -> Atom {
     atoms::ok()
 }
 
-rustler::init!(
-    "Elixir.Steinadler.Node.Client.Native",
-    [register, unregister]
-);
+rustler::init!("Elixir.Steinadler.Node.Client.Native", [bind, unbind, send]);
