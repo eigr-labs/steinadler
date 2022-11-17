@@ -1,32 +1,82 @@
 defmodule Steinadler.Node do
-  @moduledoc """
-  `Steinadler.Node`
-  """
-  use Injectx
+  use GenServer
 
-  inject(Steinadler.NodeBehaviour)
+  defmodule State do
+    defstruct id: nil, pubsub_name: nil, gnat: nil, subscription: nil, serializer: nil
 
-  @spec start(any) :: :ok
-  defdelegate start(args), to: NodeBehaviour
+    @type t :: %__MODULE__{
+            id: Node.t(),
+            pubsub_name: String.t(),
+            gnat: any(),
+            subscription: String.t(),
+            serializer: module()
+          }
+  end
 
-  @spec list :: [atom()]
-  defdelegate list(), to: NodeBehaviour
+  @main_topic "nodes.*"
 
-  @spec list(any()) :: [atom()]
-  defdelegate list(opts), to: NodeBehaviour
+  ## Server callbacks
 
-  @spec connect(atom()) :: boolean()
-  defdelegate connect(address), to: NodeBehaviour
+  @impl true
+  @doc false
+  def init(state) do
+    Process.flag(:trap_exit, true)
+    nats_conn = Keyword.fetch!(state, :connection)
+    pubsub_name = Keyword.get(state, :adapter_name, __MODULE__)
+    serializer = Keyword.get(state, :serializer, Nats.Serializer.Native)
+    {:ok, %State{pubsub_name: pubsub_name}, {:continue, {:setup, nats_conn, serializer}}}
+  end
 
-  @spec disconnect(atom()) :: boolean()
-  defdelegate disconnect(address), to: NodeBehaviour
+  @impl true
+  def handle_continue({:setup, nats_conn, serializer}, state) do
+    {gnat, subscription} =
+      case Gnat.start_link(nats_conn) do
+        {:ok, gnat} ->
+          subscription = sub(gnat)
+          {gnat, subscription}
 
-  @spec resolve_port(atom()) :: integer()
-  defdelegate resolve_port(address), to: NodeBehaviour
+        _ ->
+          raise RuntimeError, "Could not connect to Nats with options #{inspect(nats_conn)}"
+      end
 
-  @spec spawn(atom(), module(), atom(), [any()]) :: :ok
-  defdelegate spawn(address, mod, fun, args), to: NodeBehaviour
+    {:noreply,
+     %State{state | id: node(), gnat: gnat, subscription: subscription, serializer: serializer}}
+  end
 
-  @spec spawn(atom(), module(), atom(), [any()], Process.spawn_opts()) :: :ok
-  defdelegate spawn(address, mod, fun, args, opts), to: NodeBehaviour
+  @impl true
+  def handle_info(
+        {:msg, %{topic: topic, reply_to: _to, headers: headers} = event},
+        %State{pubsub_name: pubsub_name, serializer: serializer} = state
+      ) do
+    {:noreply, state}
+  end
+
+  def handle_info(event, state) do
+    Logger.warning("An unexpected event has occurred. Event: #{inspect(event)}")
+    {:noreply, state}
+  end
+
+  @impl true
+  def terminate(reason, _state) do
+    Logger.warning("#{inspect(__MODULE__)} terminate with reason: #{inspect(reason)}")
+  end
+
+  ## Client API
+
+  @doc false
+  def start_link(opts) do
+    GenServer.start_link(__MODULE__, opts, name: opts[:adapter_name])
+  end
+
+  ## Private functions
+  defp sub(gnat) do
+    case Gnat.sub(gnat, self(), @main_topic) do
+      {:ok, subscription} ->
+        subscription
+
+      _ ->
+        raise RuntimeError,
+              "Unable to subscribe Node #{inspect(node())} to channel #{@main_topic}"
+    end
+  end
 end

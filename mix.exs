@@ -21,20 +21,10 @@ defmodule Steinadler.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:cachex, "~> 3.4"},
-      {:cowlib, "~> 2.9.0", override: true},
-      {:flow, "~> 1.1"},
-      {:gen_stage, "~> 1.1"},
+      {:protobuf, "~> 0.10"},
       {:google_protos, "~> 0.1.0"},
-      {:grpc, "~> 0.5.0-beta.1"},
-      {:injectx, "~> 0.1"},
-      {:jason, "~> 1.2"},
-      {:joken, "~> 2.4"},
-      {:qex, "~> 0.5"},
-      {:libcluster, "~> 3.3"},
-      {:poison, "~> 5.0"},
-      {:retry, "~> 0.14"},
-      {:rustler, "~> 0.22"}
+      {:gnat, "~> 1.6"},
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
     ]
   end
 end
