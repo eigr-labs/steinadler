@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package eigr.steinadler.protocol.v1;
+
+//import "google/protobuf/timestamp.proto";
+import "term.proto";
+
+message Function {
+  eigr.steinadler.protocol.v1.Term spec = 1;
+}
+
+message Module {
+  string name = 1;
+  Term spec = 2;
+}
+
+message MFA {
+  Module module = 1;
+  Function function = 2;
+  Term args = 3;
+
+}
+
+message Request {
+  string node = 1;
+  oneof type {
+    Function function = 2;
+    MFA mfa = 3;
+  }
+  Term opts = 4;
+  //google.protobuf.Timestamp timestamp = 5;
+}
+
+message Response {
+  oneof type {
+    Term pid = 1;
+    Term reply = 2;
+  }
+
+  //google.protobuf.Timestamp timestamp = 3;
+}

@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package eigr.steinadler.protocol.v1;
+
+message Term {
+    bytes binary = 1;
+}

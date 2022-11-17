@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package eigr.steinadler.protocol.v1;
+
+//import "google/protobuf/timestamp.proto";
+
+message NodeUp {
+  string node_name = 1;
+}
+
+message NodeDown {
+  string node_name = 1;
+}
+
+message System {
+
+  //google.protobuf.Timestamp timestamp = 1;
+
+  oneof message {
+    NodeUp node_up = 2;
+    NodeDown node_down = 3;
+  }
+}
