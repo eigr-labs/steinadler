@@ -21,5 +21,15 @@ defmodule EncoderTest do
 
       assert 5 == decoded_func.(2, 3)
     end
+
+    test "call functions in decoded module" do
+      raw_mod = ErlangEncoder.decode(ErlangEncoder.encode(Mod))
+      random_property = :rand.uniform(1000)
+
+      assert {:ok, %Mod{property: 1}} = raw_mod.some_function()
+
+      assert {:ok, %Mod{property: ^random_property}} =
+               raw_mod.some_function_with_args(random_property)
+    end
   end
 end
